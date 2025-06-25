@@ -1,2 +1,0 @@
-# consult_america_front_end
-consult_america_front_end
