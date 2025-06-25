@@ -1,0 +1,92 @@
+<div class="layout" [class.sidebar-closed]="!sidebarOpen">
+  <aside class="sidebar">
+    <div class="logo">
+      <mat-icon (click)="toggleSidebar()" class="toggle-btn">menu</mat-icon>
+      <span *ngIf="sidebarOpen">Consult America</span>
+    </div>
+    <nav class="nav">
+      <a routerLink="/dashboard" routerLinkActive="active">
+        <mat-icon>dashboard</mat-icon>
+        <span *ngIf="sidebarOpen">Candidate Resumes</span>
+      </a>
+        <a routerLink="/dashboard" routerLinkActive="active">
+        <mat-icon>jobs</mat-icon>
+        <span *ngIf="sidebarOpen">Available Jobs</span>
+      </a>
+     <a *ngIf="userRole && userRole !== 'CANDIDATE'" routerLink="/candidate" routerLinkActive="active">
+  <mat-icon>people</mat-icon>
+  <span *ngIf="sidebarOpen">Employees</span>
+</a>
+
+      <a routerLink="/settings" routerLinkActive="active">
+        <mat-icon>settings</mat-icon>
+        <span *ngIf="sidebarOpen">Settings</span>
+      </a>
+<a routerLink="/uploadResume" routerLinkActive="active">
+        <mat-icon>Upload Resume</mat-icon>
+        <span *ngIf="sidebarOpen">Upload Resume</span>
+      </a>
+      <a routerLink="/update_profile" routerLinkActive="active">
+        <mat-icon>Profile Update</mat-icon>
+        <span *ngIf="sidebarOpen">Profile Update</span>
+      </a>
+      <button (click)="logout()">
+          <mat-icon>logout</mat-icon> Logout
+        </button>
+
+    </nav>
+  </aside>
+
+  <div class="main">
+    <!-- <header class="header"> -->
+      
+  <div class="header-container">
+    <div class="logo">Consult America HR</div>
+    
+   <div class="auth-section">
+  <ng-container *ngIf="authService.isLoggedIn(); else notAuthenticated">
+    <div class="profile-dropdown">
+      <button (click)="toggleDropdown()" class="profile-button">
+        <img *ngIf="authService.currentUserValue?.photoUrl" 
+             [src]="authService.currentUserValue.photoUrl" 
+             class="avatar" 
+             alt="Profile">
+        <span>{{ authService.currentUserValue?.name || 'Account' }}</span>
+        <mat-icon>{{ dropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down' }}</mat-icon>
+      </button>
+      
+      <div class="dropdown-menu" [class.show]="dropdownOpen">
+        <a routerLink="/profile" (click)="dropdownOpen = false">
+          <mat-icon>account_circle</mat-icon> Profile
+        </a>
+        <a routerLink="/settings" (click)="dropdownOpen = false">
+          <mat-icon>settings</mat-icon> Settings
+        </a>
+        
+        <button (click)="logout()">
+          <mat-icon>logout</mat-icon> Logout
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #notAuthenticated>
+    <button mat-stroked-button routerLink="/login" class="auth-button">
+      <mat-icon>login</mat-icon> Login
+    </button>
+    <button mat-flat-button color="primary" routerLink="/register" class="auth-button">
+      <mat-icon>person_add</mat-icon> Register
+    </button>
+  </ng-template>
+</div>
+  </div>
+<!-- </header> -->
+    
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+    <footer class="footer">
+      &copy; 2025 Consult America HR. All rights reserved.
+    </footer>
+  </div>
+</div>

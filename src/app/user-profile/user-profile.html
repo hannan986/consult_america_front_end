@@ -1,0 +1,155 @@
+<div class="profile-container">
+  <!-- <h2>User Profile</h2>
+  <p class="status-message" *ngIf="loading">Loading your profile...</p> -->
+
+ <form *ngIf="profileForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      <!-- Email (readonly) -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          id="email"
+          type="email" 
+          formControlName="email" 
+          readonly
+          class="readonly-field"
+          placeholder="Your email address" />
+        <span class="field-note">Cannot be changed</span>
+      </div>
+
+      <!-- Name -->
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input 
+          id="name"
+          type="text" 
+          formControlName="name" 
+          placeholder="Enter your full name" />
+      </div>
+
+      <!-- Personal Info Section -->
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input 
+          id="firstName"
+          type="text" 
+          formControlName="firstName" 
+          placeholder="Your first name" />
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input 
+          id="lastName"
+          type="text" 
+          formControlName="lastName" 
+          placeholder="Your last name" />
+      </div>
+
+      <!-- Client Names Section -->
+      <div class="form-group">
+        <label for="clientName1">Client/Organization 1</label>
+        <input 
+          id="clientName1"
+          type="text" 
+          formControlName="clientName1" 
+          placeholder="Primary client/organization" />
+      </div>
+
+      <div class="form-group">
+        <label for="clientName2">Client/Organization 2</label>
+        <input 
+          id="clientName2"
+          type="text" 
+          formControlName="clientName2" 
+          placeholder="Secondary client/organization" />
+      </div>
+
+      <div class="form-group">
+        <label for="clientName3">Client/Organization 3</label>
+        <input 
+          id="clientName3"
+          type="text" 
+          formControlName="clientName3" 
+          placeholder="Tertiary client/organization" />
+      </div>
+
+      <!-- Contact Info Section -->
+      <div class="form-group">
+        <label for="primaryAddress">Primary Address</label>
+        <input 
+          id="primaryAddress"
+          type="text" 
+          formControlName="primaryAddress" 
+          placeholder="Street, City, State, ZIP" />
+      </div>
+
+      <div class="form-group">
+        <label for="primaryPhone">Primary Phone</label>
+        <input 
+          id="primaryPhone"
+          type="text" 
+          formControlName="primaryPhone" 
+          placeholder="+1 (xxx) xxx-xxxx" />
+      </div>
+
+      <div class="form-group">
+        <label for="secondaryAddress">Secondary Address</label>
+        <input 
+          id="secondaryAddress"
+          type="text" 
+          formControlName="secondaryAddress" 
+          placeholder="Alternative address (optional)" />
+      </div>
+
+      <div class="form-group">
+        <label for="secondaryPhone">Secondary Phone</label>
+        <input 
+          id="secondaryPhone"
+          type="text" 
+          formControlName="secondaryPhone" 
+          placeholder="Alternative phone (optional)" />
+      </div>
+
+      <!-- Professional Info Section -->
+      <div class="form-group">
+        <label for="techStack">Technical Skills</label>
+        <input 
+          id="techStack"
+          type="text" 
+          formControlName="techStack" 
+          placeholder="Your tech stack (e.g., Angular, React, Node.js)" />
+      </div>
+
+      <div class="form-group">
+        <label for="yearsOfExperience">Years of Experience</label>
+        <input 
+          id="yearsOfExperience"
+          type="number" 
+          formControlName="yearsOfExperience" 
+          min="0" 
+          placeholder="Number of years" />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button 
+        type="submit" 
+        [disabled]="profileForm.invalid || loading" 
+        class="submit-button">
+        <span *ngIf="!loading">Update Profile</span>
+        <span *ngIf="loading">Updating...</span>
+      </button>
+    </div>
+
+    <div *ngIf="error" class="alert error">
+      <i class="icon-error"></i>
+      {{ error }}
+    </div>
+    
+    <div *ngIf="successMessage" class="alert success">
+      <i class="icon-success"></i>
+      {{ successMessage }}
+    </div>
+  </form>
+</div>

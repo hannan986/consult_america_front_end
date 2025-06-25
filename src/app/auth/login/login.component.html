@@ -1,0 +1,53 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      
+      <!-- Logo and Title -->
+      <div class="logo-container">
+        <img src="http://tineye.com/images/widgets/mona.jpg" alt="Logo" class="logo" />
+      </div>
+      <h2 class="title">Sign In</h2>
+      
+      <!-- Email Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Enter your email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+          Please enter a valid email
+        </mat-error>
+      </mat-form-field>
+      
+      <!-- Password Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Enter your password</mat-label>
+        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" />
+        <button mat-icon-button matSuffix (click)="hide = !hide" type="button" aria-label="Toggle password visibility">
+          <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+          Password is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
+          Password must be at least {{ loginForm.get('password')?.errors?.['minlength']?.requiredLength }} characters
+        </mat-error>
+      </mat-form-field>
+      
+      <!-- Actions -->
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+          Sign In
+        </button>
+      </div>
+      
+      <div class="extra-links">
+        <a mat-button routerLink="/forgot-password">Forgot password?</a>
+        <span> | </span>
+        <a mat-button routerLink="/registeration">Sign Up</a>
+      </div>
+      
+    </form>
+  </mat-card>
+</div>

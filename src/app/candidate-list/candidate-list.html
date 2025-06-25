@@ -1,0 +1,82 @@
+<!-- candidate-list.component.html -->
+<div class="candidate-table-container">
+  <h2>Candidate List</h2>
+
+  <div class="search-pagination-controls">
+    <input
+      type="text"
+      [(ngModel)]="searchText"
+      placeholder="Search candidates..."
+      class="search-bar"
+    />
+  </div>
+
+  <div class="column-toggle-dropdown" style="position: relative; display: inline-block; margin-bottom: 1rem;">
+    <button (click)="toggleDropdown()" class="dropdown-button">
+      Select Columns ▼
+    </button>
+    <div
+      class="dropdown-content"
+      *ngIf="dropdownOpen"
+      style="
+        position: absolute;
+        background: white;
+        border: 1px solid #ccc;
+        padding: 0.5rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+      "
+    >
+      <label *ngFor="let col of allColumns" style="display: block; cursor: pointer;">
+        <input
+          type="checkbox"
+          [(ngModel)]="visibleColumns[col.key]"
+          (click)="$event.stopPropagation()"
+        />
+        {{ col.label }}
+      </label>
+    </div>
+  </div>
+  <table class="excel-style-table">
+    <thead>
+  <tr>
+    <!-- <th>
+      <input type="checkbox" (change)="toggleSelectAll($event)" />
+    </th> -->
+    <th *ngFor="let col of allColumns" [hidden]="!visibleColumns[col.key]">{{ col.label }}</th>
+    <th>Action</th>
+  </tr>
+</thead>
+    <tbody>
+      <tr *ngFor="let user of filteredUsers | paginate: { itemsPerPage: 10, currentPage: currentPage }">
+        <td *ngIf="visibleColumns['id']">{{ user['id'] }}</td>
+        <td *ngIf="visibleColumns['firstName']">{{ user['firstName'] }}</td>
+        <td *ngIf="visibleColumns['lastName']">{{ user['lastName'] }}</td>
+        <td *ngIf="visibleColumns['email']">{{ user['email'] }}</td>
+        <td *ngIf="visibleColumns['primaryPhone']">{{ user['primaryPhone'] }}</td>
+        <td *ngIf="visibleColumns['secondaryPhone']">{{ user['secondaryPhone'] }}</td>
+        <td *ngIf="visibleColumns['primaryAddress']">{{ user['primaryAddress'] }}</td>
+        <td *ngIf="visibleColumns['secondaryAddress']">{{ user['secondaryAddress'] }}</td>
+        <td *ngIf="visibleColumns['yearsOfExperience']">{{ user['yearsOfExperience'] }}</td>
+        <td *ngIf="visibleColumns['clientName1']">{{ user['clientName1'] }}</td>
+        <td *ngIf="visibleColumns['clientName2']">{{ user['clientName2'] }}</td>
+        <td *ngIf="visibleColumns['clientName3']">{{ user['clientName3'] }}</td>
+        <td *ngIf="visibleColumns['techStack']">{{ user['techStack'] }}</td>
+        <td *ngIf="visibleColumns['role']">{{ user['role']?.name }}</td>
+        <td *ngIf="visibleColumns['resumes']">
+          <span *ngFor="let resume of user['resumes']">{{ resume.fileName }}<br /></span>
+        </td>
+        <td>
+          <button class="btn-view" (click)="viewDetails(user['id'])">View</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <pagination-controls
+    class="pagination-controls"
+    (pageChange)="currentPage = $event"
+  ></pagination-controls>
+</div>

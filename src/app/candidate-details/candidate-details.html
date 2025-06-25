@@ -1,0 +1,37 @@
+
+<div class="candidate-card" *ngIf="candidate">
+  <h2>{{ candidate.name }}</h2>
+  <p><strong>Email:</strong> {{ candidate.email }}</p>
+  <p><strong>Role:</strong> {{ candidate.role?.name }}</p>
+
+  <div class="resume-section">
+    <h3><i class="bi bi-folder"></i> Resumes</h3>
+
+    <div class="resume-grid">
+  <ng-container *ngIf="resumes.length > 0; else noResumes">
+    <div class="resume-box" *ngFor="let resume of resumes">
+      <div class="resume-header">
+        <i class="bi bi-file-earmark-text"></i>
+        <div class="resume-meta">
+          <h4>{{ resume.fileName }}</h4>
+          <small>{{ resume.uploadedAt | date: 'medium' }}</small>
+        </div>
+      </div>
+      <div class="resume-actions">
+        <a [href]="resume.downloadUrl" target="_blank" class="btn btn-download">
+          <i class="bi bi-cloud-arrow-down-fill"></i> Download
+        </a>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noResumes>
+    <p class="no-resumes"><i class="bi bi-exclamation-circle"></i> No resumes found.</p>
+  </ng-template>
+</div>
+
+    <ng-template #noResumes>
+      <p class="no-resumes"><i class="bi bi-exclamation-circle"></i> No resumes found for this candidate.</p>
+    </ng-template>
+  </div>
+</div>
