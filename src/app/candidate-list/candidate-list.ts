@@ -94,7 +94,7 @@ toggleSelectAll(event: Event): void {
 
   viewDetails(id: number) {
   console.log("Navigating to candidate details with ID =", id);
-  this.router.navigate(['/candidate-details', id]).then(success => {
+  this.router.navigate(['/candidates', id]).then(success => {
     if (success) {
       console.log('Navigation successful!');
     } else {
@@ -102,6 +102,8 @@ toggleSelectAll(event: Event): void {
     }
   });
 }
+
+
 
 }
 

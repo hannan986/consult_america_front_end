@@ -1,0 +1,54 @@
+<div class="job-listings-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <mat-spinner diameter="48" color="primary"></mat-spinner>
+    <p class="loading-text">Loading opportunities for you...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && jobs.length === 0" class="empty-state">
+    <div class="empty-content">
+      <mat-icon class="empty-icon">work_off</mat-icon>
+      <h3 class="empty-title">No Current Openings</h3>
+      <p class="empty-message">We don't have any available positions at the moment.</p>
+      <p class="empty-subtext">Check back later or subscribe to our job alerts</p>
+    </div>
+  </div>
+
+  <!-- Job Listings -->
+  <div *ngIf="!loading && jobs.length" class="job-listings">
+    <h2 class="section-title">Available Positions</h2>
+    <p class="section-subtitle">{{ jobs.length }} position{{ jobs.length > 1 ? 's' : '' }} found</p>
+    
+    <div class="job-cards-grid">
+      <mat-card *ngFor="let job of jobs" class="job-card mat-elevation-z1">
+        <mat-card-header>
+          <div mat-card-avatar class="job-avatar" >
+            <mat-icon>{{ getJobTypeIcon(job.type) }}</mat-icon>
+          </div>
+          <mat-card-title>{{ job.title }}</mat-card-title>
+          <mat-card-subtitle>
+            <span class="job-meta">
+              <span class="job-type">{{ job.type || 'Flexible' }}</span> • 
+              <span class="job-location">{{ job.location || 'Remote' }}</span>
+            </span>
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p class="job-description">{{ job.description }}</p>
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+          <a [href]="'mailto:' + job.contactEmail + '?subject=Application: ' + job.title"
+             mat-raised-button
+             color="primary"
+             class="apply-button">
+            <mat-icon>send</mat-icon>
+            Apply Now
+          </a>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

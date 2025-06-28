@@ -13,13 +13,33 @@ export class CandidateService {
   }
 
   getCandidate(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`);
+    return this.http.get<any>(`${this.apiUrl}/candidates/${id}`);
   }
 
   getResumesByEmail(email: string): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/email/${email}`);
 }
 
- 
+ // ✅ Get documents by user ID
+  getDocumentsByUserId(userId: number): Observable<any[]> {
+    return this.http.get<any[]>(`http://localhost:8080/api/documents/user/${userId}`);
+  }
+
+  // ✅ Upload document
+ uploadDocument(userId: number, file: File, documentType: string): Observable<any> {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('userId', userId.toString());
+  formData.append('documentType', documentType);
+
+  return this.http.post<any>('http://localhost:8080/api/documents/upload', formData);
+}
+
+  // ✅ Delete document
+  deleteDocument(documentId: number): Observable<any> {
+  console.log(`Deleting document with ID: ${documentId}`);
+  return this.http.delete<any>(`http://localhost:8080/api/documents/${documentId}`);
+}
+  
 }
 

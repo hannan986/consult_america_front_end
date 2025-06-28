@@ -4,7 +4,7 @@
       
       <!-- Logo and Title -->
       <div class="logo-container">
-        <img src="http://tineye.com/images/widgets/mona.jpg" alt="Logo" class="logo" />
+        <img src="https://consultamerica.net/wp-content/uploads/2025/04/meet-our-team.png" alt="Logo" class="logo" />
       </div>
       <h2 class="title">Sign In</h2>
       
@@ -45,7 +45,9 @@
       <div class="extra-links">
         <a mat-button routerLink="/forgot-password">Forgot password?</a>
         <span> | </span>
-        <a mat-button routerLink="/registeration">Sign Up</a>
+        <button mat-button (click)="singup()">
+          <mat-icon></mat-icon> Sign Up
+        </button>
       </div>
       
     </form>

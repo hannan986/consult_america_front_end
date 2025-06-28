@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
    providers: [DatePipe],
-   imports: [DatePipe, NgIf, NgFor, FormsModule,],
+   imports: [DatePipe, NgIf, NgFor, FormsModule],
 })
 export class Dashboard implements OnInit {
   API_BASE = "http://localhost:8080/resumes";

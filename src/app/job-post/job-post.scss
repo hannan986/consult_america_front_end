@@ -1,0 +1,44 @@
+.job-post-card {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  h2 { margin-bottom: 1rem; }
+
+  .form-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+
+    label { font-weight: 600; margin-bottom: 0.4rem; color: #333; }
+    input, select, textarea {
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+      &:focus { outline: none; border-color: #0066cc; }
+    }
+
+    & > input[placeholder] { flex: 1; margin-right: 0.5rem; }
+  }
+
+  .btn-row {
+    display: flex;
+    justify-content: flex-end;
+    button {
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      &:disabled { opacity: 0.6; cursor: progress; }
+    }
+  }
+
+  .msg { margin-top: 1rem; font-size: 0.95rem; color: #006600; }
+}

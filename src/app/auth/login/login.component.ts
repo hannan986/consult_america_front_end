@@ -61,6 +61,12 @@ get f() {
     });
   }
 
+   singup(): void {
+    //this.authService.logout();
+    this.router.navigate(['/registeration']);
+  }
+
+
   testNavigation() {
   console.log('Attempting navigation');
   this.router.navigate(['/register'])

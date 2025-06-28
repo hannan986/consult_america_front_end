@@ -38,8 +38,7 @@ constructor(private authService: AuthService, private fb: FormBuilder, private u
     this.loading = true;
     this.loadUserProfile();
   }
-    this.loading = true;
-    this.loadUserProfile();
+    
   }
 
   loadUserProfile(): void {

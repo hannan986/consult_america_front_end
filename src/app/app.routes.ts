@@ -10,7 +10,9 @@ import { CandidateDetails } from './candidate-details/candidate-details';
 import { RegistrationComponent } from './auth/registration/registration.component';
 import { ResumeUpload } from './resume-upload/resume-upload';
 import { UserProfile } from './user-profile/user-profile';
-
+import { JobPost } from './job-post/job-post';
+import { JobList } from './job-list/job-list';
+import { DocumentUploadComponent } from './document-upload.component/document-upload.component';
 export const routes: Routes = [
   // Public routes (no layout, no auth guard)
   { path: 'login', component: LoginComponent },
@@ -27,10 +29,13 @@ export const routes: Routes = [
       { path: 'settings', component: Settings },
       { path: 'candidate', component: CandidateList },
       { path: 'candidates/:id', component: CandidateDetails },
+      { path: 'candidates', component: CandidateDetails },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'uploadResume', component: ResumeUpload },
       { path: 'update_profile', component: UserProfile },
-
+      { path: 'post-job', component: JobPost},
+      { path: 'job-list', component: JobList },
+      { path: 'document-upload', component: DocumentUploadComponent },
     ]
   },
   

@@ -49,15 +49,20 @@
         </button>
       </div>
 
+      <div class="extra-links">
+        
+        <button mat-button (click)="singIn()">
+          <mat-icon style="justify-content: center;">already have account? </mat-icon> already have account? sign In
+        </button>
+      </div>
       <!-- Error -->
       <div *ngIf="error" class="error-message">
         {{ error }}
       </div>
 
-      <!-- Already registered -->
-      <div class="login-link">
-        Already have an account? <a routerLink="/login">Sign In</a>
-      </div>
+   
+
+       
     </form>
   </mat-card>
 </div>

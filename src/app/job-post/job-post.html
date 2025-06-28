@@ -1,0 +1,39 @@
+<div class="job-post-card">
+  <h2>Post New Job</h2>
+  <form (ngSubmit)="submitJob()" #jobForm="ngForm">
+    <div class="form-row">
+      <label>Title*</label>
+      <input type="text" [(ngModel)]="job.title" name="title" required>
+    </div>
+    <div class="form-row">
+      <label>Contact Email*</label>
+      <input type="email" [(ngModel)]="job.contactEmail" name="contactEmail" required>
+    </div>
+    <div class="form-row">
+      <label>Location</label>
+      <input type="text" [(ngModel)]="job.location" name="location">
+    </div>
+    <div class="form-row">
+      <label>Type</label>
+      <select [(ngModel)]="job.type" name="type">
+        <option value="">-- Select --</option>
+        <option>Full-time</option>
+        <option>Part-time</option>
+        <option>Contract</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Tech Stack & Client</label>
+      <input type="text" placeholder="Tech Stack" [(ngModel)]="job.techStack" name="techStack">
+      <input type="text" placeholder="Client Name" [(ngModel)]="job.clientName" name="clientName">
+    </div>
+    <div class="form-row">
+      <label>Description</label>
+      <textarea rows="5" [(ngModel)]="job.description" name="description"></textarea>
+    </div>
+    <div class="btn-row">
+      <button type="submit" [disabled]="submitting">{{ submitting ? 'Posting...' : 'Post Job' }}</button>
+    </div>
+    <p class="msg" *ngIf="message">{{ message }}</p>
+  </form>
+</div>

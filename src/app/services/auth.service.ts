@@ -52,6 +52,8 @@ login(email: string, password: string): Observable<any> {
         console.log('user role', localStorage.getItem('userRole'));
         localStorage.setItem('userEmail', user.email);
         console.log('user role', localStorage.getItem('userEmail'));
+        localStorage.setItem('userId', user.userId);
+        console.log('user role', localStorage.getItem('userId'));
       }
       this.currentUserSubject.next(user);
       return user;
@@ -68,6 +70,9 @@ login(email: string, password: string): Observable<any> {
       next: () => {
         localStorage.removeItem('currentUser');
         this.currentUserSubject.next(null);
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userId');
         this.router.navigate(['/login']);
       },
       error: (err) => {

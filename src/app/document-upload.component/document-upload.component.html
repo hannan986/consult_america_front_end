@@ -1,0 +1,7 @@
+<div class="upload-card">
+  <h2>Upload Document</h2>
+  <input type="number" [(ngModel)]="userId" placeholder="Enter User ID" class="form-control mb-2" />
+  <input type="file" (change)="onFileSelected($event)" class="form-control mb-2" />
+  <button (click)="uploadDocument()" class="btn btn-primary">Upload</button>
+  <div class="mt-3 text-success" *ngIf="message">{{ message }}</div>
+</div>

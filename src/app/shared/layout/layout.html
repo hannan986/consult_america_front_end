@@ -1,19 +1,22 @@
 <div class="layout" [class.sidebar-closed]="!sidebarOpen">
   <aside class="sidebar">
-    <div class="logo">
-      <mat-icon (click)="toggleSidebar()" class="toggle-btn">menu</mat-icon>
-      <span *ngIf="sidebarOpen">Consult America</span>
-    </div>
+   <div class="logo-wrapper">
+  <img src="../../../assets/logo.png" alt="" class="logo-img" />
+
+  <mat-icon (click)="toggleSidebar()" class="toggle-btn">menu</mat-icon>
+
+  <span *ngIf="sidebarOpen" class="app-name">Consult America</span>
+</div>
     <nav class="nav">
       <a routerLink="/dashboard" routerLinkActive="active">
         <mat-icon>dashboard</mat-icon>
         <span *ngIf="sidebarOpen">Candidate Resumes</span>
       </a>
-        <a routerLink="/dashboard" routerLinkActive="active">
+        <!-- <a routerLink="/dashboard" routerLinkActive="active">
         <mat-icon>jobs</mat-icon>
         <span *ngIf="sidebarOpen">Available Jobs</span>
-      </a>
-     <a *ngIf="userRole && userRole !== 'CANDIDATE'" routerLink="/candidate" routerLinkActive="active">
+      </a> -->
+     <a *ngIf="userRole && userRole !== 'CANDIDATE' && userRole !== 'EMPLOYEE'" routerLink="/candidate" routerLinkActive="active">
   <mat-icon>people</mat-icon>
   <span *ngIf="sidebarOpen">Employees</span>
 </a>
@@ -26,10 +29,23 @@
         <mat-icon>Upload Resume</mat-icon>
         <span *ngIf="sidebarOpen">Upload Resume</span>
       </a>
+      <a routerLink="/candidates" routerLinkActive="active">
+  <mat-icon>Profile</mat-icon>
+  <span *ngIf="sidebarOpen">Your Details</span>
+</a>
       <a routerLink="/update_profile" routerLinkActive="active">
         <mat-icon>Profile Update</mat-icon>
         <span *ngIf="sidebarOpen">Profile Update</span>
       </a>
+      <a routerLink="/job-list" routerLinkActive="active">
+  <mat-icon>work</mat-icon>
+  <span *ngIf="sidebarOpen">View Jobs</span>
+  
+</a>
+      <a *ngIf="userRole === 'ADMIN'" routerLink="/post-job" routerLinkActive="active">
+    <mat-icon>work_outline</mat-icon>
+    <span>Post Job</span>
+  </a>
       <button (click)="logout()">
           <mat-icon>logout</mat-icon> Logout
         </button>
