@@ -3,6 +3,8 @@ export interface UserProfileModel {
   id: number;
   email: string;
   name: string;
+  visaStatus?: string;
+  workAuthorization?: string;
   clientName1?: string;
   clientName2?: string;
   clientName3?: string;
@@ -14,4 +16,6 @@ export interface UserProfileModel {
   secondaryPhone?: string;
   techStack?: string;
   yearsOfExperience?: number;
+  location?: string;
+  employmentType?: string;
 }

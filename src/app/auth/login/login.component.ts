@@ -66,10 +66,13 @@ get f() {
     this.router.navigate(['/registeration']);
   }
 
+  forgotPassword(): void {
+  this.router.navigate(['/forgot-password']);
+  }
 
   testNavigation() {
   console.log('Attempting navigation');
-  this.router.navigate(['/register'])
+  this.router.navigate(['/forgot-password'])
     .then(success => {
       console.log('Navigation success:', success);
     })

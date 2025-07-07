@@ -1,142 +1,103 @@
 <div class="profile-container">
-  <!-- <h2>User Profile</h2>
-  <p class="status-message" *ngIf="loading">Loading your profile...</p> -->
-
- <form *ngIf="profileForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+  <form *ngIf="profileForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
     <div class="form-grid">
-      <!-- Email (readonly) -->
+      <!-- Email -->
       <div class="form-group">
         <label for="email">Email</label>
-        <input 
-          id="email"
-          type="email" 
-          formControlName="email" 
-          readonly
-          class="readonly-field"
-          placeholder="Your email address" />
+        <input id="email" type="email" formControlName="email" class="readonly-field" readonly />
         <span class="field-note">Cannot be changed</span>
       </div>
 
       <!-- Name -->
       <div class="form-group">
         <label for="name">Full Name</label>
-        <input 
-          id="name"
-          type="text" 
-          formControlName="name" 
-          placeholder="Enter your full name" />
+        <input id="name" type="text" formControlName="name" placeholder="Enter your full name" />
       </div>
 
-      <!-- Personal Info Section -->
+      <!-- First and Last Name -->
       <div class="form-group">
         <label for="firstName">First Name</label>
-        <input 
-          id="firstName"
-          type="text" 
-          formControlName="firstName" 
-          placeholder="Your first name" />
+        <input id="firstName" type="text" formControlName="firstName" />
       </div>
 
       <div class="form-group">
         <label for="lastName">Last Name</label>
-        <input 
-          id="lastName"
-          type="text" 
-          formControlName="lastName" 
-          placeholder="Your last name" />
+        <input id="lastName" type="text" formControlName="lastName" />
       </div>
 
-      <!-- Client Names Section -->
+      <!-- Visa and Work Auth -->
+      <div class="form-group">
+        <label for="visaStatus">Visa Status</label>
+        <input id="visaStatus" type="text" formControlName="visaStatus" />
+      </div>
+
+      <div class="form-group">
+        <label for="workAuthorization">Work Authorization</label>
+        <input id="workAuthorization" type="text" formControlName="workAuthorization" />
+      </div>
+
+      <!-- Clients -->
       <div class="form-group">
         <label for="clientName1">Client/Organization 1</label>
-        <input 
-          id="clientName1"
-          type="text" 
-          formControlName="clientName1" 
-          placeholder="Primary client/organization" />
+        <input id="clientName1" type="text" formControlName="clientName1" />
       </div>
 
       <div class="form-group">
         <label for="clientName2">Client/Organization 2</label>
-        <input 
-          id="clientName2"
-          type="text" 
-          formControlName="clientName2" 
-          placeholder="Secondary client/organization" />
+        <input id="clientName2" type="text" formControlName="clientName2" />
       </div>
 
       <div class="form-group">
         <label for="clientName3">Client/Organization 3</label>
-        <input 
-          id="clientName3"
-          type="text" 
-          formControlName="clientName3" 
-          placeholder="Tertiary client/organization" />
+        <input id="clientName3" type="text" formControlName="clientName3" />
       </div>
 
-      <!-- Contact Info Section -->
+      <!-- Address & Phone -->
       <div class="form-group">
         <label for="primaryAddress">Primary Address</label>
-        <input 
-          id="primaryAddress"
-          type="text" 
-          formControlName="primaryAddress" 
-          placeholder="Street, City, State, ZIP" />
+        <input id="primaryAddress" type="text" formControlName="primaryAddress" />
       </div>
 
       <div class="form-group">
         <label for="primaryPhone">Primary Phone</label>
-        <input 
-          id="primaryPhone"
-          type="text" 
-          formControlName="primaryPhone" 
-          placeholder="+1 (xxx) xxx-xxxx" />
+        <input id="primaryPhone" type="text" formControlName="primaryPhone" />
       </div>
 
       <div class="form-group">
         <label for="secondaryAddress">Secondary Address</label>
-        <input 
-          id="secondaryAddress"
-          type="text" 
-          formControlName="secondaryAddress" 
-          placeholder="Alternative address (optional)" />
+        <input id="secondaryAddress" type="text" formControlName="secondaryAddress" />
       </div>
 
       <div class="form-group">
         <label for="secondaryPhone">Secondary Phone</label>
-        <input 
-          id="secondaryPhone"
-          type="text" 
-          formControlName="secondaryPhone" 
-          placeholder="Alternative phone (optional)" />
+        <input id="secondaryPhone" type="text" formControlName="secondaryPhone" />
       </div>
 
-      <!-- Professional Info Section -->
+      <!-- Tech & Experience -->
       <div class="form-group">
         <label for="techStack">Technical Skills</label>
-        <input 
-          id="techStack"
-          type="text" 
-          formControlName="techStack" 
-          placeholder="Your tech stack (e.g., Angular, React, Node.js)" />
+        <input id="techStack" type="text" formControlName="techStack" />
       </div>
 
       <div class="form-group">
         <label for="yearsOfExperience">Years of Experience</label>
-        <input 
-          id="yearsOfExperience"
-          type="number" 
-          formControlName="yearsOfExperience" 
-          min="0" 
-          placeholder="Number of years" />
+        <input id="yearsOfExperience" type="number" formControlName="yearsOfExperience" />
+      </div>
+
+      <!-- Location & Employment Type -->
+      <div class="form-group">
+        <label for="location">Location</label>
+        <input id="location" type="text" formControlName="location" />
+      </div>
+
+      <div class="form-group">
+        <label for="employmentType">Employment Type</label>
+        <input id="employmentType" type="text" formControlName="employmentType" />
       </div>
     </div>
 
     <div class="form-actions">
-      <button 
-        type="submit" 
-        [disabled]="profileForm.invalid || loading" 
-        class="submit-button">
+      <button type="submit" [disabled]="profileForm.invalid || loading" class="submit-button">
         <span *ngIf="!loading">Update Profile</span>
         <span *ngIf="loading">Updating...</span>
       </button>
@@ -146,7 +107,7 @@
       <i class="icon-error"></i>
       {{ error }}
     </div>
-    
+
     <div *ngIf="successMessage" class="alert success">
       <i class="icon-success"></i>
       {{ successMessage }}

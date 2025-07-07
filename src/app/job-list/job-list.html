@@ -1,4 +1,24 @@
 <div class="job-listings-container">
+  <!-- Search & View Toggle Controls -->
+  <div class="controls">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search Jobs</mat-label>
+      <input matInput [(ngModel)]="searchTerm" (ngModelChange)="filterJobs()" placeholder="Title, location, type...">
+      <button mat-icon-button *ngIf="searchTerm" matSuffix (click)="searchTerm=''; filterJobs()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <div class="view-toggle">
+      <button mat-icon-button (click)="viewMode='grid'" [class.active]="viewMode === 'grid'" matTooltip="Grid View">
+        <mat-icon>grid_view</mat-icon>
+      </button>
+      <button mat-icon-button (click)="viewMode='list'" [class.active]="viewMode === 'list'" matTooltip="List View">
+        <mat-icon>view_list</mat-icon>
+      </button>
+    </div>
+  </div>
+
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-state">
     <mat-spinner diameter="48" color="primary"></mat-spinner>
@@ -6,7 +26,7 @@
   </div>
 
   <!-- Empty State -->
-  <div *ngIf="!loading && jobs.length === 0" class="empty-state">
+  <div *ngIf="!loading && filteredJobs.length === 0" class="empty-state">
     <div class="empty-content">
       <mat-icon class="empty-icon">work_off</mat-icon>
       <h3 class="empty-title">No Current Openings</h3>
@@ -16,38 +36,46 @@
   </div>
 
   <!-- Job Listings -->
-  <div *ngIf="!loading && jobs.length" class="job-listings">
+  <div *ngIf="!loading && filteredJobs.length" class="job-listings">
     <h2 class="section-title">Available Positions</h2>
-    <p class="section-subtitle">{{ jobs.length }} position{{ jobs.length > 1 ? 's' : '' }} found</p>
-    
-    <div class="job-cards-grid">
-      <mat-card *ngFor="let job of jobs" class="job-card mat-elevation-z1">
-        <mat-card-header>
-          <div mat-card-avatar class="job-avatar" >
-            <mat-icon>{{ getJobTypeIcon(job.type) }}</mat-icon>
+    <p class="section-subtitle">{{ filteredJobs.length }} position{{ filteredJobs.length > 1 ? 's' : '' }} found</p>
+
+    <div [ngClass]="{ 'job-cards-grid': viewMode === 'grid', 'job-list-view': viewMode === 'list' }">
+      <mat-card *ngFor="let job of filteredJobs"
+          class="job-card mat-elevation-z3"
+          tabindex="0"
+          role="button"
+          [attr.aria-label]="'View details for ' + job.title">
+          
+        <mat-card-header (click)="navigateIfHasId(job.id)">
+          <div mat-card-avatar class="job-avatar">
+            <mat-icon>{{ getJobTypeIcon(job.employmentType) }}</mat-icon>
           </div>
           <mat-card-title>{{ job.title }}</mat-card-title>
           <mat-card-subtitle>
             <span class="job-meta">
-              <span class="job-type">{{ job.type || 'Flexible' }}</span> • 
+              <span class="job-type">{{ job.employmentType || 'Flexible' }}</span> •
+             
               <span class="job-location">{{ job.location || 'Remote' }}</span>
             </span>
           </mat-card-subtitle>
         </mat-card-header>
 
-        <mat-card-content>
-          <p class="job-description">{{ job.description }}</p>
+        <mat-card-content (click)="navigateIfHasId(job.id)">
+          <!-- <p class="job-description">{{ job.description }}</p> -->
         </mat-card-content>
 
-        <mat-card-actions align="end">
-          <a [href]="'mailto:' + job.contactEmail + '?subject=Application: ' + job.title"
+         
+        <!-- <mat-card-actions align="end">
+          <a [attr.aria-label]="'Apply for ' + job.title"
+             [href]="'mailto:' + job.contactEmail + '?subject=Application: ' + job.title"
              mat-raised-button
              color="primary"
              class="apply-button">
             <mat-icon>send</mat-icon>
             Apply Now
           </a>
-        </mat-card-actions>
+        </mat-card-actions> -->
       </mat-card>
     </div>
   </div>

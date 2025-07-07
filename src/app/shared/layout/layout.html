@@ -21,10 +21,10 @@
   <span *ngIf="sidebarOpen">Employees</span>
 </a>
 
-      <a routerLink="/settings" routerLinkActive="active">
+      <!-- <a routerLink="/settings" routerLinkActive="active">
         <mat-icon>settings</mat-icon>
         <span *ngIf="sidebarOpen">Settings</span>
-      </a>
+      </a> -->
 <a routerLink="/uploadResume" routerLinkActive="active">
         <mat-icon>Upload Resume</mat-icon>
         <span *ngIf="sidebarOpen">Upload Resume</span>
@@ -72,12 +72,12 @@
       </button>
       
       <div class="dropdown-menu" [class.show]="dropdownOpen">
-        <a routerLink="/profile" (click)="dropdownOpen = false">
+        <a routerLink="/candidates" (click)="dropdownOpen = false">
           <mat-icon>account_circle</mat-icon> Profile
         </a>
-        <a routerLink="/settings" (click)="dropdownOpen = false">
+        <!-- <a routerLink="/settings" (click)="dropdownOpen = false">
           <mat-icon>settings</mat-icon> Settings
-        </a>
+        </a> -->
         
         <button (click)="logout()">
           <mat-icon>logout</mat-icon> Logout

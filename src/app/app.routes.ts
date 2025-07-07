@@ -13,11 +13,16 @@ import { UserProfile } from './user-profile/user-profile';
 import { JobPost } from './job-post/job-post';
 import { JobList } from './job-list/job-list';
 import { DocumentUploadComponent } from './document-upload.component/document-upload.component';
+import { JobDetail } from './job-detail/job-detail';
+import { ForgotPassword } from './auth/forgot-password/forgot-password';
+import { ResetPassword } from './auth/reset-password/reset-password';
+
 export const routes: Routes = [
   // Public routes (no layout, no auth guard)
   { path: 'login', component: LoginComponent },
   { path: 'registeration', component: RegistrationComponent },
-  
+  { path: 'forgot-password', component: ForgotPassword },
+   { path: 'reset-password', component: ResetPassword },
   // Protected routes (with layout and auth guard)
   {
     path: '',
@@ -36,6 +41,9 @@ export const routes: Routes = [
       { path: 'post-job', component: JobPost},
       { path: 'job-list', component: JobList },
       { path: 'document-upload', component: DocumentUploadComponent },
+      { path: 'job-details/:id', component: JobDetail },
+      { path: 'job-details/:id', component: JobDetail },
+      
     ]
   },
   

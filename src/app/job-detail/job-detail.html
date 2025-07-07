@@ -1,0 +1,70 @@
+<div class="job-details-wrapper" *ngIf="job">
+  <mat-card class="job-card mat-elevation-z8">
+
+    <!-- Header -->
+    <div class="job-header">
+      <div class="job-header-left">
+        <mat-icon class="job-icon">work_outline</mat-icon>
+        <div>
+          <h2 class="job-title">{{ job.title }}</h2>
+          <p class="job-meta">
+            <mat-icon class="meta-icon">location_on</mat-icon> {{ job.location || 'Remote' }} |
+            <mat-icon class="meta-icon">access_time</mat-icon> Posted on: {{ job.postedAt | date:'mediumDate' }}
+          </p>
+          <p class="job-type">
+            <mat-chip color="primary" selected>{{ job.employmentType }}</mat-chip>
+          </p>
+        </div>
+      </div>
+      <div class="job-header-right">
+        <button mat-stroked-button color="accent" >Apply Now</button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Job Description -->
+    <div class="job-section">
+      <h3><mat-icon>description</mat-icon> Description</h3>
+      <p>{{ job.description }}</p>
+    </div>
+
+    <!-- Tech Stack -->
+    <div class="job-section">
+      <h3><mat-icon>code</mat-icon> Technology Stack</h3>
+      <p>{{ job.technologyStack }}</p>
+    </div>
+
+    <!-- Client Info -->
+    <div class="job-section">
+      <h3><mat-icon>business</mat-icon> Client</h3>
+      <p>{{ job.clientName }}</p>
+    </div>
+
+    <!-- Employment Type -->
+    <div class="job-section">
+      <h3><mat-icon>badge</mat-icon> Employment Type</h3>
+      <p>{{ job.employmentType }}</p>
+    </div>
+
+    <!-- Contact -->
+    <div class="job-section apply-section">
+      <h3><mat-icon>email</mat-icon> Apply</h3>
+      <p>Email your resume to:</p>
+      <a [href]="'mailto:' + job.contactEmail" class="email-link">{{ job.contactEmail }}</a>
+    </div>
+
+  </mat-card>
+</div>
+
+<!-- Not Found Message -->
+<div *ngIf="!job && !loading" class="no-job">
+  <mat-icon>error_outline</mat-icon>
+  <p>Job not found or no longer available.</p>
+</div>
+
+<!-- Loading Spinner -->
+<div *ngIf="loading" class="loading-section">
+  <mat-spinner diameter="40"></mat-spinner>
+  <p>Loading job details...</p>
+</div>

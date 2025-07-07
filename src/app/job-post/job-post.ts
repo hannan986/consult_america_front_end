@@ -15,10 +15,11 @@ export class JobPost {
     title: '',
     description: '',
     location: '',
-    type: '',
-    techStack: '',
+    employmentType: '',
+    technologyStack: '',
     clientName: '',
-    contactEmail: ''
+    contactEmail: '',
+    postedAt:''
   };
   submitting = false;
   message = '';
@@ -35,7 +36,7 @@ export class JobPost {
       next: () => {
         this.message = 'Job posted successfully!';
         this.submitting = false;
-        this.job = { title: '', description: '', location: '', type: '', techStack: '', clientName: '', contactEmail: '' };
+        this.job = { title: '', description: '', location: '', employmentType: '', technologyStack: '', clientName: '', contactEmail: '',postedAt:'' };
       },
       error: err => {
         this.message = 'Failed to post job.';

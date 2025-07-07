@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { JobPosts } from '../models/jobModel';
 import { JobService } from '../services/job.service';
-import { DatePipe, NgIf, NgFor } from '@angular/common';
+import { DatePipe, NgIf, NgFor, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
 //import { JobDetailsDialogComponent } from './job-details-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-job-list',
@@ -23,6 +24,8 @@ import { MatDialog } from '@angular/material/dialog';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+     NgClass,
+     MatButtonModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule
@@ -35,21 +38,30 @@ export class JobList implements OnInit {
   filteredJobs: JobPosts[] = [];
   loading = true;
   searchTerm = '';
-
+viewMode: 'grid' | 'list' = 'grid';
+  
   constructor(
     private jobService: JobService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router 
   ) {}
 
   ngOnInit(): void {
     this.loadJobs();
   }
 
+  navigateIfHasId(id: number | undefined): void {
+    console.log("NAVIGATE IF HAS ID " + id);
+  if (id !== undefined) {
+    this.navigateToJobDetails(id);
+  }
+}
   loadJobs(): void {
     this.loading = true;
     this.jobService.getJobs().subscribe({
       next: (list) => {
         this.jobs = list;
+        console.log(this.jobs);
         this.filteredJobs = [...this.jobs];
         this.loading = false;
       },
@@ -71,10 +83,22 @@ export class JobList implements OnInit {
       job.title.toLowerCase().includes(term) ||
       (job.description && job.description.toLowerCase().includes(term)) ||
       (job.location && job.location.toLowerCase().includes(term)) ||
-      (job.type && job.type.toLowerCase().includes(term))
+      (job.employmentType && job.employmentType.toLowerCase().includes(term))
     );
   }
 
+
+  
+  navigateToJobDetails(jobId: number) {
+  console.log("Navigating to candidate details with ID =", jobId);
+  this.router.navigate(['/job-details', jobId]).then((success: any) => {
+    if (success) {
+      console.log('Navigation successful!');
+    } else {
+      console.log('Navigation failed!');
+    }
+  });
+}
   getJobTypeClass(jobType: string | undefined): string {
     if (!jobType) return '';
     const type = jobType.toLowerCase();

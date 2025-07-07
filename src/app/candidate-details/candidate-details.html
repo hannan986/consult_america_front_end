@@ -1,8 +1,49 @@
 <div class="candidate-card shadow-sm p-4 rounded bg-white" *ngIf="candidate">
-  <!-- Header Section -->
+
+  <!-- Header with Send Button -->
+  <div class="text-end my-3">
+    <button class="btn btn-primary" (click)="openSendDialog()">
+      <i class="bi bi-send"></i> Send Candidate Info via Email
+    </button>
+  </div>
+
+  <!-- Modal -->
+  <div *ngIf="showSendDialog" class="modal-backdrop">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow-lg rounded">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">Select Details to Send</h5>
+          <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closeSendDialog()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" id="sendInfo" [(ngModel)]="sendInfo">
+            <label class="form-check-label" for="sendInfo">Candidate Information</label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" id="sendResumes" [(ngModel)]="sendResumes">
+            <label class="form-check-label" for="sendResumes">Resumes</label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" id="sendDocs" [(ngModel)]="sendDocs">
+            <label class="form-check-label" for="sendDocs">Documents</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="closeSendDialog()">Cancel</button>
+          <button class="btn btn-success" [disabled]="isSending" (click)="sendSelected()">
+            <span *ngIf="!isSending"><i class="bi bi-envelope-check"></i> Send</span>
+            <span *ngIf="isSending"><i class="bi bi-hourglass-split"></i> Sending...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Candidate Name and Role -->
   <div class="d-flex align-items-center mb-4 border-bottom pb-3">
     <div class="avatar bg-primary text-white rounded-circle me-3">
-      {{ candidate.firstName.charAt(0) }}{{ candidate.lastName.charAt(0) }}
+      {{ candidate.firstName[0] }}{{ candidate.lastName[0] }}
     </div>
     <div>
       <h2 class="mb-0">{{ candidate.firstName }} {{ candidate.lastName }}</h2>
@@ -10,7 +51,7 @@
     </div>
   </div>
 
-  <!-- Contact Section -->
+  <!-- Contact Info -->
   <div class="row mb-4">
     <div class="col-md-6">
       <h5 class="text-muted"><i class="bi bi-envelope"></i> Email</h5>
@@ -28,108 +69,121 @@
 
       <h5 class="text-muted"><i class="bi bi-geo"></i> Secondary Address</h5>
       <p>{{ candidate.secondaryAddress || 'N/A' }}</p>
+
+      <h5 class="text-muted"><i class="bi bi-briefcase"></i> Location</h5>
+      <p>{{ candidate.location || 'N/A' }}</p>
+
+      <h5 class="text-muted"><i class="bi bi-person-check"></i> Employment Type</h5>
+      <p>{{ candidate.employmentType || 'N/A' }}</p>
     </div>
   </div>
 
   <!-- Professional Summary -->
   <div class="mb-4">
     <h4 class="border-bottom pb-2 mb-3"><i class="bi bi-person-vcard"></i> Professional Summary</h4>
-    <p><strong>Years of Experience:</strong> {{ candidate.yearsOfExperience }}</p>
+    <p><strong>Experience:</strong> {{ candidate.yearsOfExperience }} yrs</p>
     <p><strong>Client 1:</strong> {{ candidate.clientName1 || 'N/A' }}</p>
     <p><strong>Client 2:</strong> {{ candidate.clientName2 || 'N/A' }}</p>
     <p><strong>Client 3:</strong> {{ candidate.clientName3 || 'N/A' }}</p>
+    <p><strong>Tech Stack:</strong> {{ candidate.techStack || 'N/A' }}</p>
   </div>
 
-  <!-- Tech Stack Section -->
+  <!-- Immigration Info -->
   <div class="mb-4">
-    <h4 class="border-bottom pb-2 mb-3"><i class="bi bi-layers"></i> Technology Stack</h4>
-    <pre class="bg-light border rounded p-3">{{ candidate.techStack }}</pre>
+    <h4 class="border-bottom pb-2 mb-3"><i class="bi bi-shield-lock"></i> Immigration Status</h4>
+    <p><strong>Visa Status:</strong> {{ candidate.visaStatus || 'N/A' }}</p>
+    <p><strong>Work Authorization:</strong> {{ candidate.workAuthorization || 'N/A' }}</p>
   </div>
 
-  <!-- Resumes Section -->
- <div class="mb-4">
-  <h4 class="border-bottom pb-2 mb-3"><i class="bi bi-folder2"></i> Resumes</h4>
-  <div class="row">
-    <ng-container *ngIf="resumes.length > 0; else noResumes">
-      <div class="col-md-4 mb-3" *ngFor="let resume of resumes">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body d-flex flex-column justify-content-between">
-            <div>
-              <h5 class="card-title"><i class="bi bi-file-earmark-text"></i> {{ resume.fileName }}</h5>
-              <p class="text-muted mb-2"><small>Uploaded: {{ resume.uploadedAt | date: 'medium' }}</small></p>
+  <!-- Resumes -->
+  <div class="mb-4">
+    <h4 class="border-bottom pb-2 mb-3"><i class="bi bi-folder2"></i> Resumes</h4>
+    <div class="row">
+      <ng-container *ngIf="resumes.length > 0; else noResumes">
+        <div class="col-md-4 mb-3" *ngFor="let r of resumes">
+          <label class="form-check-label w-100">
+            <div class="card h-100 shadow-sm">
+              <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input me-2" [(ngModel)]="r.selected" />
+                    <i class="bi bi-file-earmark-text"></i>
+                    <strong>{{ r.fileName }}</strong>
+                  </div>
+                  <p class="text-muted mt-2"><small>Uploaded: {{ r.uploadedAt | date:'medium' }}</small></p>
+                </div>
+                <a [href]="r.downloadUrl" target="_blank" class="btn btn-outline-primary mt-auto">
+                  <i class="bi bi-cloud-arrow-down"></i> Download
+                </a>
+              </div>
             </div>
-            <a [href]="resume.downloadUrl" target="_blank" class="btn btn-outline-primary mt-auto">
-              <i class="bi bi-cloud-arrow-down"></i> Download
-            </a>
-          </div>
+          </label>
         </div>
-      </div>
-    </ng-container>
-
-    <!-- Template shown when no resumes exist -->
-    <ng-template #noResumes>
-      <div class="col-12 text-center py-4 text-muted">
-        <i class="bi bi-exclamation-circle fs-1 mb-3"></i>
-        <p>No resumes found.</p>
-      </div>
-    </ng-template>
-
+      </ng-container>
+      <ng-template #noResumes>
+        <div class="col-12 text-center py-4 text-muted">
+          <i class="bi bi-exclamation-circle fs-1 mb-3"></i>
+          <p>No resumes found.</p>
+        </div>
+      </ng-template>
+    </div>
   </div>
-</div>
 
-    <div class="mb-4">
-  <h4 class="border-bottom pb-2 mb-3">
-    <i class="bi bi-upload"></i> Upload Documents
-  </h4>
-
-  <!-- Upload Form -->
-  <div class="input-group mb-3">
+  <!-- Upload Documents -->
+  <div class="mb-4">
+    <h4 class="border-bottom pb-2 mb-3"><i class="bi bi-upload"></i> Upload Documents</h4>
+    <div class="input-group mb-3">
       <input type="file" class="form-control" (change)="onFileSelected($event)" />
-     <select class="form-select ms-2" [(ngModel)]="selectedDocumentType" required>
-  <option value="" disabled selected>Select document type</option>
-  <option value="Resume">Resume</option>
-  <option value="Certification">Certification</option>
-  <option value="ID Proof">ID Proof</option>
-  <option value="Other">Other</option>
-</select>
-      <button
-        class="btn btn-success ms-2"
-        [disabled]="!selectedFile || !selectedDocumentType"
-        (click)="uploadDocument()"
-      >
-        <i class="bi bi-upload"></i> Upload
+      <select class="form-select ms-2" [(ngModel)]="selectedDocumentType" required>
+        <option value="" disabled selected>Select document type</option>
+        <option value="Resume">Resume</option>
+        <option value="Certification">Certification</option>
+        <option value="ID Proof">ID Proof</option>
+        <option value="Other">Other</option>
+      </select>
+      <button class="btn btn-success ms-2" [disabled]="!selectedFile || !selectedDocumentType || isUploading" (click)="uploadDocument()">
+        <span *ngIf="!isUploading"><i class="bi bi-upload"></i> Upload</span>
+        <span *ngIf="isUploading">Uploading...</span>
       </button>
     </div>
+  </div>
 
   <!-- Document List -->
-   <div class="row">
-    <ng-container *ngIf="documents.length > 0; else noDocs">
-      <div class="col-md-4 mb-3" *ngFor="let doc of documents">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body d-flex flex-column justify-content-between">
-            <div>
-              <h5 class="card-title"><i class="bi bi-file-earmark-text"></i> {{ doc.fileName }}</h5>
-              <p class="text-muted mb-2"><small>Uploaded: {{ doc.uploadedAt | date: 'medium' }}</small></p>
+  <div class="mb-4">
+    <h4 class="border-bottom pb-2 mb-3"><i class="bi bi-folder"></i> Documents</h4>
+    <div class="row">
+      <ng-container *ngIf="documents.length > 0; else noDocs">
+        <div class="col-md-4 mb-3" *ngFor="let d of documents">
+          <label class="form-check-label w-100">
+            <div class="card h-100 shadow-sm">
+              <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input me-2" [(ngModel)]="d.selected" />
+                    <i class="bi bi-file-earmark-text"></i>
+                    <strong>{{ d.fileName }}</strong>
+                  </div>
+                  <p class="text-muted mt-2"><small>Uploaded: {{ d.uploadedAt | date:'medium' }}</small></p>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <a [href]="d.downloadUrl" target="_blank" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-cloud-arrow-down"></i> Download
+                  </a>
+                  <button class="btn btn-outline-danger btn-sm" [disabled]="isDeleting" (click)="deleteDocument(d.id)">
+                    <i class="bi bi-trash"></i> Delete
+                  </button>
+                </div>
+              </div>
             </div>
-            <div class="d-flex justify-content-between">
-              <a [href]="doc.downloadUrl" target="_blank" class="btn btn-outline-primary btn-sm">
-                <i class="bi bi-cloud-arrow-down"></i> Download
-              </a>
-              <button class="btn btn-outline-danger btn-sm" (click)="deleteDocument(doc.id)">
-                <i class="bi bi-trash"></i> Delete
-              </button>
-            </div>
-          </div>
+          </label>
         </div>
-      </div>
-    </ng-container>
-
-    <!-- No Documents Template -->
-    <ng-template #noDocs>
-      <div class="col-12 text-center py-4 text-muted">
-        <i class="bi bi-exclamation-circle fs-1 mb-3"></i>
-        <p>No documents uploaded.</p>
-      </div>
-    </ng-template>
+      </ng-container>
+      <ng-template #noDocs>
+        <div class="col-12 text-center py-4 text-muted">
+          <i class="bi bi-exclamation-circle fs-1 mb-3"></i>
+          <p>No documents uploaded.</p>
+        </div>
+      </ng-template>
+    </div>
   </div>
 </div>

@@ -43,12 +43,14 @@
       </div>
       
       <div class="extra-links">
-        <a mat-button routerLink="/forgot-password">Forgot password?</a>
-        <span> | </span>
-        <button mat-button (click)="singup()">
-          <mat-icon></mat-icon> Sign Up
-        </button>
-      </div>
+  <button mat-button (click)="forgotPassword()">
+    <mat-icon>lock_reset</mat-icon> Forgot Password
+  </button>
+  <span> | </span>
+  <button mat-button (click)="singup()">
+    <mat-icon>person_add</mat-icon> Sign Up
+  </button>
+</div>
       
     </form>
   </mat-card>

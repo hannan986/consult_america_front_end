@@ -223,22 +223,29 @@ handleSearchInput(event: Event): void {
     });
   }
 
-  deleteResume(id: string): void {
+ async deleteResume(id: string): Promise<void> {
+  try {
+    debugger;
     this.showLoading(true, 'delete');
-    this.http.delete(`${this.API_BASE}/${id}`).subscribe({
-      next: () => {
-        this.showToast('Resume deleted successfully', 'success');
-        this.loadResumes();
-      //  this.loadStats();
-      },
-      error: () => {
-        this.showToast('Failed to delete resume', 'error');
-      },
-      complete: () => {
-        this.showLoading(false, 'delete');
-      }
+
+    const response = await fetch(`${this.API_BASE}/${id}`, {
+      method: 'DELETE',
+      credentials: 'include'
     });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete');
+    }
+
+    this.showToast('Resume deleted successfully', 'success');
+    this.loadResumes();
+    // this.loadStats();
+  } catch (error) {
+    this.showToast('Failed to delete resume', 'error');
+  } finally {
+    this.showLoading(false, 'delete');
   }
+}
 
   showEmailDialog(resumeId: string): void {
   Swal.fire({

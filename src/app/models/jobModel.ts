@@ -3,9 +3,9 @@ export interface JobPosts {
   title: string;
   description: string;
   location: string;
-  type: string;
-  techStack: string;
+  employmentType: string;
+  technologyStack: string;
   clientName: string;
   contactEmail: string;
-  postedDate?: string;
+  postedAt: string;
 }

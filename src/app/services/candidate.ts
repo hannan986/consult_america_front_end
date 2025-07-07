@@ -26,20 +26,42 @@ export class CandidateService {
   }
 
   // ✅ Upload document
- uploadDocument(userId: number, file: File, documentType: string): Observable<any> {
+async uploadDocument(userId: number, file: File, documentType: string): Promise<void> {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('userId', userId.toString());
   formData.append('documentType', documentType);
 
-  return this.http.post<any>('http://localhost:8080/api/documents/upload', formData);
+  const response = await fetch('http://localhost:8080/api/documents/upload', {
+    method: 'POST',
+    body: formData,
+    credentials: 'include'
+  });
+
+  if (!response.ok) {
+    throw new Error(`Upload failed with status: ${response.status}`);
+  }
 }
 
   // ✅ Delete document
-  deleteDocument(documentId: number): Observable<any> {
-  console.log(`Deleting document with ID: ${documentId}`);
-  return this.http.delete<any>(`http://localhost:8080/api/documents/${documentId}`);
-}
+//   deleteDocument(documentId: number): Observable<any> {
+//   console.log(`Deleting document with ID: ${documentId}`);
+//   return this.http.delete<any>(`http://localhost:8080/api/documents/${documentId}`);
+// }
   
+
+deleteDocument(documentId: number): Observable<any> {
+  return this.http.delete(`http://localhost:8080/api/documents/${documentId}`, {
+    responseType: 'text' as const
+  });
 }
+
+sendCandidateEmail(candidateId: number, data: any): Promise<void> {
+  return this.http.post<void>(`http://localhost:8080/user-profile/${candidateId}/send-email-complete`, data).toPromise();
+}
+
+
+}
+
+
 

@@ -1,39 +1,62 @@
 <div class="job-post-card">
-  <h2>Post New Job</h2>
-  <form (ngSubmit)="submitJob()" #jobForm="ngForm">
+  <h2>🚀 Post a New Job</h2>
+  <form (ngSubmit)="submitJob()" #jobForm="ngForm" novalidate>
+    
+    <!-- Title -->
     <div class="form-row">
-      <label>Title*</label>
-      <input type="text" [(ngModel)]="job.title" name="title" required>
+      <label for="title">Job Title<span>*</span></label>
+      <input type="text" id="title" [(ngModel)]="job.title" name="title" required>
     </div>
+
+    <!-- Contact Email -->
     <div class="form-row">
-      <label>Contact Email*</label>
-      <input type="email" [(ngModel)]="job.contactEmail" name="contactEmail" required>
+      <label for="email">Contact Email<span>*</span></label>
+      <input type="email" id="email" [(ngModel)]="job.contactEmail" name="contactEmail" required>
     </div>
+
+    <!-- Location -->
     <div class="form-row">
-      <label>Location</label>
-      <input type="text" [(ngModel)]="job.location" name="location">
+      <label for="location">Location</label>
+      <input type="text" id="location" [(ngModel)]="job.location" name="location" placeholder="e.g. Remote, NYC, Berlin">
     </div>
+
+    <!-- Employment Type -->
     <div class="form-row">
-      <label>Type</label>
-      <select [(ngModel)]="job.type" name="type">
+      <label for="type">Employment Type</label>
+      <select id="type" [(ngModel)]="job.employmentType" name="type">
         <option value="">-- Select --</option>
         <option>Full-time</option>
         <option>Part-time</option>
         <option>Contract</option>
       </select>
     </div>
-    <div class="form-row">
-      <label>Tech Stack & Client</label>
-      <input type="text" placeholder="Tech Stack" [(ngModel)]="job.techStack" name="techStack">
-      <input type="text" placeholder="Client Name" [(ngModel)]="job.clientName" name="clientName">
+
+    <!-- Tech Stack & Client -->
+    <div class="form-row inline">
+      <div>
+        <label for="tech">Tech Stack: </label>
+        <input type="text" id="tech" [(ngModel)]="job.technologyStack" name="techStack" placeholder="e.g. Angular, Java, AWS">
+      </div>
+      <div>
+        <label for="client">Client Name:</label>
+        <input type="text" id="client" [(ngModel)]="job.clientName" name="clientName" placeholder="  e.g. Google">
+      </div>
     </div>
+
+    <!-- Description -->
     <div class="form-row">
-      <label>Description</label>
-      <textarea rows="5" [(ngModel)]="job.description" name="description"></textarea>
+      <label for="description">Job Description</label>
+      <textarea id="description" rows="6" [(ngModel)]="job.description" name="description" placeholder="Write the job description..."></textarea>
     </div>
+
+    <!-- Submit Button -->
     <div class="btn-row">
-      <button type="submit" [disabled]="submitting">{{ submitting ? 'Posting...' : 'Post Job' }}</button>
+      <button type="submit" [disabled]="submitting">
+        {{ submitting ? '🚧 Posting...' : '✅ Post Job' }}
+      </button>
     </div>
+
+    <!-- Message -->
     <p class="msg" *ngIf="message">{{ message }}</p>
   </form>
 </div>
