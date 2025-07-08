@@ -247,7 +247,7 @@ handleSearchInput(event: Event): void {
   }
 }
 
-  showEmailDialog(resumeId: string): void {
+  showEmailDialog(resumeId: string,userEmail:String): void {
   Swal.fire({
     title: 'Send Profile via Email',
     html: `
@@ -289,12 +289,12 @@ handleSearchInput(event: Event): void {
     }
   }).then((result) => {
     if (result.isConfirmed && result.value) {
-      this.sendProfileEmail(resumeId, result.value.email, result.value.subject, result.value.message);
+      this.sendProfileEmail(resumeId, result.value.email, result.value.subject, result.value.message,userEmail);
     }
   });
 }
 
-  async sendProfileEmail(resumeId: string, recipientEmail: string, subject: string, message: string): Promise<void> {
+  async sendProfileEmail(resumeId: string, recipientEmail: string, subject: string, message: string,userEmail: String): Promise<void> {
   try {
     const response = await fetch(`${this.API_BASE}/${resumeId}/send-profile`, {
       method: 'POST',
@@ -302,6 +302,7 @@ handleSearchInput(event: Event): void {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        userEmail: userEmail,
         recipientEmail,
         subject: subject || '',
         customMessage: message || ''
