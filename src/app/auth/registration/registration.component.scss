@@ -55,6 +55,18 @@ mat-label {
   justify-content: center;
 }
 
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.logo {
+  max-width: 100px;
+  height: auto;
+  border-radius: 8px;
+}
+
 .form-actions {
   margin-top: 1rem;
   display: flex;
