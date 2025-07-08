@@ -20,7 +20,7 @@ import { ResetPassword } from './auth/reset-password/reset-password';
 export const routes: Routes = [
   // Public routes (no layout, no auth guard)
   { path: 'login', component: LoginComponent },
-  { path: 'registeration', component: RegistrationComponent },
+ 
   { path: 'forgot-password', component: ForgotPassword },
    { path: 'reset-password', component: ResetPassword },
   // Protected routes (with layout and auth guard)
@@ -43,6 +43,7 @@ export const routes: Routes = [
       { path: 'document-upload', component: DocumentUploadComponent },
       { path: 'job-details/:id', component: JobDetail },
       { path: 'job-details/:id', component: JobDetail },
+       { path: 'registeration', component: RegistrationComponent },
       
     ]
   },
