@@ -1,18 +1,16 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-forgot-password',
-  imports: [FormsModule],
   templateUrl: './forgot-password.html',
-  styleUrl: './forgot-password.scss'
+  styleUrls: ['./forgot-password.scss'],
+   imports: [FormsModule,CommonModule ], // ✅ fixed property name
 })
-
-
 export class ForgotPassword {
- email = '';
+  email = '';
   successMessage = '';
   errorMessage = '';
 
@@ -32,5 +30,3 @@ export class ForgotPassword {
       });
   }
 }
-
-

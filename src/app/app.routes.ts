@@ -33,7 +33,11 @@ export const routes: Routes = [
       { path: 'employees', component: Employees },
       { path: 'settings', component: Settings },
       { path: 'candidate', component: CandidateList },
-      { path: 'candidates/:id', component: CandidateDetails },
+      { 
+  path: 'candidates/:id', 
+  component: CandidateDetails,
+  data: { renderMode: 'no-prerender' } // ✅ disables prerender for dynamic route
+},
       { path: 'candidates', component: CandidateDetails },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'uploadResume', component: ResumeUpload },
@@ -41,8 +45,13 @@ export const routes: Routes = [
       { path: 'post-job', component: JobPost},
       { path: 'job-list', component: JobList },
       { path: 'document-upload', component: DocumentUploadComponent },
-      { path: 'job-details/:id', component: JobDetail },
-      { path: 'job-details/:id', component: JobDetail },
+      
+      { 
+  path: 'job-details/:id', 
+  component: JobDetail,
+  data: { renderMode: 'no-prerender' } // ✅ disables prerender for dynamic route
+},
+    
        { path: 'registeration', component: RegistrationComponent },
       
     ]
