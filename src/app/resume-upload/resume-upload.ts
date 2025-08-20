@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment.prod';
 
 @Component({
   selector: 'app-resume-upload',
@@ -17,9 +18,10 @@ export class ResumeUpload {
     email: '',
     contact: '',
     summary: '',
+  //  title: '',
     file: null as File | null
   };
-
+private apiUrl = `${environment.apiBaseUrl}`;
   uploadProgress: number | null = null;
   message: string = '';
 
@@ -44,9 +46,11 @@ export class ResumeUpload {
     uploadData.append('name', this.formData.name);
     if (this.formData.email) uploadData.append('email', this.formData.email);
     if (this.formData.contact) uploadData.append('contact', this.formData.contact);
+ //   if( this.formData.title) uploadData.append('title', this.formData.title);
     if (this.formData.summary) uploadData.append('summary', this.formData.summary);
+    
 
-    this.http.post('http://localhost:8080/admin/upload', uploadData, {
+    this.http.post(`${this.apiUrl}/admin/upload`, uploadData, {
       reportProgress: true,
       withCredentials: true,
       observe: 'events'

@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+<<<<<<< HEAD
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+=======
+import { environment } from '../../../environments/environment.prod';
+>>>>>>> f1cdcaa (UPDATED DEPLOYED)
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.html',
@@ -17,7 +21,8 @@ export class ForgotPassword {
   constructor(private http: HttpClient, private router: Router) {}
 
   onSubmit(): void {
-    this.http.post('http://localhost:8080/api/auth/forgot-password', { email: this.email })
+    const url = `${environment.apiBaseUrl}/api/auth/forgot-password`;
+    this.http.post('${environment.apiBaseUrl}/api/auth/forgot-password', { email: this.email })
       .subscribe({
         next: () => {
           this.successMessage = 'Password reset link sent to your email.';

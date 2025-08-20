@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { StatePersistenceService } from './services/state-persistence.service';
 import { RouterOutlet } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpClientModule } from '@angular/common/http';  // Keep this import
@@ -20,6 +22,24 @@ import { RegistrationComponent } from './auth/registration/registration.componen
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
+export class App implements OnInit {
   protected title = 'consult_america_hr_front_end';
+
+  constructor(
+    private router: Router,
+    private statePersistence: StatePersistenceService
+  ) {}
+
+  ngOnInit() {
+    const savedRoute = this.statePersistence.getRoute();
+    if (savedRoute && savedRoute !== this.router.url) {
+      this.router.navigateByUrl(savedRoute);
+    }
+    this.router.events.subscribe(event => {
+      // Only save route on navigation end
+      if ((event as any).url) {
+        this.statePersistence.saveRoute((event as any).url);
+      }
+    });
+  }
 }

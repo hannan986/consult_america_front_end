@@ -1,4 +1,7 @@
-import { Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+// Import your components
 import { Layout } from './shared/layout/layout';
 import { Dashboard } from './dashboard/dashboard';
 import { Employees } from './employees/employees';
@@ -18,16 +21,16 @@ import { ForgotPassword } from './auth/forgot-password/forgot-password';
 import { ResetPassword } from './auth/reset-password/reset-password';
 
 export const routes: Routes = [
-  // Public routes (no layout, no auth guard)
+  // Public routes
   { path: 'login', component: LoginComponent },
- 
   { path: 'forgot-password', component: ForgotPassword },
-   { path: 'reset-password', component: ResetPassword },
-  // Protected routes (with layout and auth guard)
+  { path: 'reset-password', component: ResetPassword },
+  
+  // Protected routes with layout
   {
     path: '',
     component: Layout,
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard], // Uncomment when auth is ready
     children: [
       { path: 'dashboard', component: Dashboard },
       { path: 'employees', component: Employees },
@@ -38,11 +41,11 @@ export const routes: Routes = [
   component: CandidateDetails,
   data: { renderMode: 'no-prerender' } // ✅ disables prerender for dynamic route
 },
-      { path: 'candidates', component: CandidateDetails },
+       { path: 'candidates', component: CandidateDetails },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'uploadResume', component: ResumeUpload },
       { path: 'update_profile', component: UserProfile },
-      { path: 'post-job', component: JobPost},
+      { path: 'post-job', component: JobPost },
       { path: 'job-list', component: JobList },
       { path: 'document-upload', component: DocumentUploadComponent },
       
@@ -56,7 +59,13 @@ export const routes: Routes = [
       
     ]
   },
-  
-  // Wildcard route (should be last)
+
+  // Wildcard route
   { path: '**', redirectTo: 'login' }
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, { useHash: false })], // HTML5 routing
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}

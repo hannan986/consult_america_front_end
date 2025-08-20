@@ -2,9 +2,10 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Injectable } from '@angular/core';
 import { UserProfileModel } from '../models/userProfileModel';
+import { environment } from '../../environments/environment.prod';
 @Injectable({ providedIn: 'root' })
 export class CandidateService {
-  private apiUrl = 'http://localhost:8080/admin';
+  private apiUrl = `${environment.apiBaseUrl}`;
 
   constructor(private http: HttpClient) {}
 
@@ -22,7 +23,7 @@ export class CandidateService {
 
  // ✅ Get documents by user ID
   getDocumentsByUserId(userId: number): Observable<any[]> {
-    return this.http.get<any[]>(`http://localhost:8080/api/documents/user/${userId}`);
+    return this.http.get<any[]>(`${this.apiUrl}/api/documents/user/${userId}`);
   }
 
   // ✅ Upload document
@@ -32,7 +33,7 @@ async uploadDocument(userId: number, file: File, documentType: string): Promise<
   formData.append('userId', userId.toString());
   formData.append('documentType', documentType);
 
-  const response = await fetch('http://localhost:8080/api/documents/upload', {
+  const response = await fetch(`${this.apiUrl}/api/documents/upload`, {
     method: 'POST',
     body: formData,
     credentials: 'include'
@@ -51,13 +52,13 @@ async uploadDocument(userId: number, file: File, documentType: string): Promise<
   
 
 deleteDocument(documentId: number): Observable<any> {
-  return this.http.delete(`http://localhost:8080/api/documents/${documentId}`, {
+  return this.http.delete(`${this.apiUrl}/api/documents/${documentId}`, {
     responseType: 'text' as const
   });
 }
 
 sendCandidateEmail(candidateId: number, data: any): Promise<void> {
-  return this.http.post<void>(`http://localhost:8080/user-profile/${candidateId}/send-email-complete`, data).toPromise();
+  return this.http.post<void>(`${this.apiUrl}/user-profile/${candidateId}/send-email-complete`, data).toPromise();
 }
 
 

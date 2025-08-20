@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { UserProfileModel } from '../models/userProfileModel'
+import { environment } from '../../environments/environment.prod';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +13,7 @@ export class AuthService {
  
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
-  private apiUrl = 'http://localhost:8080/api/auth'; // Update with your API URL
+  private apiUrl = `${environment.apiBaseUrl}/api/auth`; // Update with your API URL
   private isBrowser: boolean;
 
   constructor(

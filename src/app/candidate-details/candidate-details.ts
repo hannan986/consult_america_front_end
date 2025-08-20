@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CandidateService } from '../services/candidate';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { environment } from '../../environments/environment.prod';
 @Component({
   selector: 'app-candidate-detail',
   templateUrl: './candidate-details.html',
@@ -51,11 +51,12 @@ export class CandidateDetails implements OnInit {
   }
 
   loadResumesByEmail(email: string): void {
+    
     this.candidateService.getResumesByEmail(email).subscribe({
       next: (data) => {
         this.resumes = data.map(resume => ({
           ...resume,
-          downloadUrl: `http://localhost:8080/api/resumes/${resume.id}/download`
+          downloadUrl: `${environment.apiBaseUrl}/api/resumes/${resume.id}/download`
         }));
       },
       error: (err) => console.error('Error loading resumes:', err)
@@ -67,7 +68,7 @@ export class CandidateDetails implements OnInit {
       next: (data: any[]) => {
         this.documents = data.map(doc => ({
           ...doc,
-          downloadUrl: `http://localhost:8080/api/documents/${doc.id}/download`
+          downloadUrl: `${environment.apiBaseUrl}/api/documents/${doc.id}/download`
         }));
       },
       error: (err) => {

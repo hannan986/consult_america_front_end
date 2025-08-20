@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { F } from '@angular/cdk/keycodes';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { environment } from '../../../environments/environment.prod';
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.html',
@@ -26,7 +26,7 @@ export class ResetPassword implements OnInit {
   errorMessage = '';
 
   constructor(private route: ActivatedRoute, private http: HttpClient, private router: Router) {}
-
+  
   ngOnInit(): void {
     this.token = this.route.snapshot.queryParamMap.get('token') || '';
   }
@@ -36,7 +36,8 @@ export class ResetPassword implements OnInit {
       token: this.token,
       newPassword: this.newPassword
     };
- this.http.post('http://localhost:8080/api/auth/reset-password', payload)
+    const url = `${environment.apiBaseUrl}/api/auth/reset-password`;
+ this.http.post(url, payload)
       .subscribe({
         next: () => alert('Password reset successful!'),
         error: err => {

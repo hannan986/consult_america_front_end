@@ -5,11 +5,12 @@ import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { UserProfileModel } from '../models/userProfileModel'
+import { environment } from '../../environments/environment.prod';
 @Injectable({
   providedIn: 'root'
 })
 export class UserProfileService {
-private apiUrl = 'http://localhost:8080/user-profile';
+private apiUrl = `${environment.apiBaseUrl}/user-profile`;
 
   constructor(private http: HttpClient) {}
 
