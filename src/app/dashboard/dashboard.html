@@ -37,9 +37,13 @@
         <thead class="table-header">
           <tr>
             <th class="header-name">Name</th>
+            <th class="header-email">Title</th>
             <th class="header-email">Email</th>
             <th class="header-tags">Tags</th>
+            <th class="header-visaStatus"> Visa </th>
+            <th class="header-linkedln"> Linked In </th>
             <th class="header-actions">Actions</th>
+            
           </tr>
         </thead>
 
@@ -51,12 +55,16 @@
           </tr>
           <tr *ngFor="let resume of currentResumes">
             <td>{{ resume.name || 'N/A' }}</td>
+            <td> {{ resume.title || 'N/A' }} </td>
             <td>{{ resume.email || 'N/A' }}</td>
             <td class="tags-cell">
               <span *ngFor="let tag of resume.tags" class="badge tag-badge">
                 {{ tag }}
               </span>
             </td>
+            <td>{{ resume.visaStatus || 'N/A' }}</td>
+            <td>{{ resume.linkedln || 'N/A' }}</td>
+            
             <td class="actions-cell">
               <div class="action-buttons">
                 <button class="btn btn-download" (click)="downloadResume(resume.id)">

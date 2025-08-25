@@ -75,9 +75,12 @@ onSearchEnter(): void {
     const formData = new FormData();
     formData.append('file', this.uploadForm.get('resumeFile')?.value);
     formData.append('name', this.uploadForm.get('name')?.value);
+    formData.append('title', this.uploadForm.get('title')?.value);
     formData.append('email', this.uploadForm.get('email')?.value);
     formData.append('contact', this.uploadForm.get('contact')?.value);
     formData.append('summary', this.uploadForm.get('summary')?.value);
+    formData.append('visaStatus', this.uploadForm.get('visaStatus')?.value);
+    formData.append('linkedln', this.uploadForm.get('linkedln')?.value);
 
     this.showLoading(true, 'upload');
 

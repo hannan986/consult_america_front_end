@@ -15,10 +15,21 @@
         <label for="contact" class="form-label">Contact</label>
         <input [(ngModel)]="formData.contact" name="contact" type="text" class="form-control">
       </div>
-      <!-- <div class="col-md-6">
+      <div class="col-md-6">
         <label for="title" class="form-label">Title</label>
         <input [(ngModel)]="formData.title" name="title" type="text" class="form-control">
-      </div> -->
+      </div>
+
+      <div class="col-md-6">
+        <label for="visaStatus" class="form-label">Visa Status</label>
+        <input [(ngModel)]="formData.visaStatus" name="visaStatus" type="text" class="form-control" title="Enter your visa status" placeholder="Visa Status">
+      </div>
+      <div class="col-md-6">
+        <label for="linkedln" class="form-label">Linkedln</label>
+        <input [(ngModel)]="formData.linkedln" name="linkedln" type="text" class="form-control" title="Enter your LinkedIn profile URL" placeholder="LinkedIn Profile URL">
+      </div>
+
+
       <div class="col-12">
         <label for="summary" class="form-label">Professional Summary</label>
         <textarea [(ngModel)]="formData.summary" name="summary" rows="4" class="form-control" placeholder="Write summary..."></textarea>

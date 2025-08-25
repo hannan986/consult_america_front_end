@@ -18,7 +18,9 @@ export class ResumeUpload {
     email: '',
     contact: '',
     summary: '',
-  //  title: '',
+    title: '',
+    visaStatus: '',
+    linkedln: '',
     file: null as File | null
   };
 private apiUrl = `${environment.apiBaseUrl}`;
@@ -46,8 +48,10 @@ private apiUrl = `${environment.apiBaseUrl}`;
     uploadData.append('name', this.formData.name);
     if (this.formData.email) uploadData.append('email', this.formData.email);
     if (this.formData.contact) uploadData.append('contact', this.formData.contact);
- //   if( this.formData.title) uploadData.append('title', this.formData.title);
+    if( this.formData.title) uploadData.append('title', this.formData.title);
     if (this.formData.summary) uploadData.append('summary', this.formData.summary);
+    if (this.formData.visaStatus) uploadData.append('visaStatus', this.formData.visaStatus);
+    if (this.formData.linkedln) uploadData.append('linkedln', this.formData.linkedln);
     
 
     this.http.post(`${this.apiUrl}/admin/upload`, uploadData, {
