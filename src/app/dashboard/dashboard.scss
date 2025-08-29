@@ -257,6 +257,16 @@ $box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
         }
       }
 
+      &.btn-edit {
+  background-color: #e3f2fd; // light blue background
+  color: #156615c9; // darker blue text
+  border: 1px solid #90caf9;
+
+  &:hover {
+    background-color: #bbdefb; // slightly darker blue on hover
+  }
+}
+
       &.btn-email {
         background-color: #e3f2fd;
         color: #1565c0;

@@ -22,6 +22,8 @@ export class Dashboard implements OnInit {
     weeklyUploads: 0
   };
   selectedTags: string[] = [];
+isEditMode = false;
+editingResumeId: string | null = null;
 
   constructor(
     private http: HttpClient,
@@ -359,4 +361,110 @@ handleSearchInput(event: Event): void {
       stopOnFocus: true,
     }).showToast();
   }
+
+
+  EditDialog(resume: any): void {
+  this.isEditMode = true;
+  this.editingResumeId = resume.id;
+
+  // Patch form with existing data
+  this.uploadForm.patchValue({
+    name: resume.name,
+    email: resume.email,
+    contact: resume.contact,
+    title: resume.title,
+    summary: resume.summary,
+    visaStatus: resume.visaStatus,
+    linkedln: resume.linkedln
+  });
+
+  // Clear file field (user may or may not upload new one)
+  this.uploadForm.get('resumeFile')?.setValue(null);
+
+  Swal.fire({
+    title: 'Edit Resume',
+    html: `
+      <div class="mb-3">
+        <label class="form-label">Name *</label>
+        <input id="editName" class="form-control" type="text" value="${resume.name}" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input id="editEmail" class="form-control" type="email" value="${resume.email || ''}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input id="editTitle" class="form-control" type="text" value="${resume.title || ''}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Visa Status</label>
+        <input id="editVisa" class="form-control" type="text" value="${resume.visaStatus || ''}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">LinkedIn</label>
+        <input id="editLinkedln" class="form-control" type="text" value="${resume.linkedln || ''}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Summary</label>
+        <textarea id="editSummary" class="form-control">${resume.summary || ''}</textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Upload New File (optional)</label>
+        <input id="editFile" class="form-control" type="file">
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Update Resume',
+    preConfirm: () => {
+      const popup = Swal.getPopup();
+      if (!popup) return false;
+
+      return {
+        name: (popup.querySelector('#editName') as HTMLInputElement).value,
+        email: (popup.querySelector('#editEmail') as HTMLInputElement).value,
+        title: (popup.querySelector('#editTitle') as HTMLInputElement).value,
+        visaStatus: (popup.querySelector('#editVisa') as HTMLInputElement).value,
+        linkedln: (popup.querySelector('#editLinkedln') as HTMLInputElement).value,
+        summary: (popup.querySelector('#editSummary') as HTMLTextAreaElement).value,
+        file: (popup.querySelector('#editFile') as HTMLInputElement).files?.[0] || null
+      };
+    }
+  }).then((result) => {
+    if (result.isConfirmed && this.editingResumeId) {
+      this.updateResume(this.editingResumeId, result.value);
+    }
+  });
+}
+
+
+updateResume(id: string, updatedData: any): void {
+  const formData = new FormData();
+  formData.append('name', updatedData.name);
+  formData.append('email', updatedData.email || '');
+  formData.append('title', updatedData.title || '');
+  formData.append('visaStatus', updatedData.visaStatus || '');
+  formData.append('linkedln', updatedData.linkedln || '');
+  formData.append('summary', updatedData.summary || '');
+  if (updatedData.file) {
+    formData.append('file', updatedData.file);
+  }
+
+  this.showLoading(true, 'update');
+this.http.post(`${this.API_BASE}/update/${id}`, formData, { withCredentials: true }).subscribe({
+  next: () => {
+    this.showToast('Resume updated successfully!', 'success');
+    this.loadResumes();
+  },
+  error: (err) => {
+    this.showToast('Failed to update resume', 'error');
+    console.error(err);
+  },
+  complete: () => {
+    this.showLoading(false, 'update');
+    this.isEditMode = false;
+    this.editingResumeId = null;
+  }
+});
+}
+
 }
