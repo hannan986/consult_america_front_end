@@ -137,6 +137,9 @@ onSearchEnter(): void {
     this.http.get(this.API_BASE, {withCredentials: true}).subscribe({
       next: (resumes: any) => {
         this.currentResumes = Array.isArray(resumes?.content) ? resumes.content : [];
+       // console.log("Current Resume" + this.currentResumes.toString);
+        console.log("Current Resumes:", JSON.stringify(this.currentResumes, null, 2));
+
         //this.loadStats();
       },
       error: () => {
@@ -253,7 +256,7 @@ handleSearchInput(event: Event): void {
   }
 }
 
-  showEmailDialog(resumeId: string,userEmail:String): void {
+  showEmailDialog(resumeId: string, userEmail: string, resumeSummary: string): void {
   Swal.fire({
     title: 'Send Profile via Email',
     html: `
@@ -267,7 +270,7 @@ handleSearchInput(event: Event): void {
       </div>
       <div class="mb-3">
         <label class="form-label">Custom Message (optional)</label>
-        <textarea id="customMessage" class="form-control" rows="3"></textarea>
+        <textarea id="customMessage" class="form-control" rows="5">${resumeSummary}</textarea>
       </div>
     `,
     focusConfirm: false,
@@ -295,7 +298,7 @@ handleSearchInput(event: Event): void {
     }
   }).then((result) => {
     if (result.isConfirmed && result.value) {
-      this.sendProfileEmail(resumeId, result.value.email, result.value.subject, result.value.message,userEmail);
+      this.sendProfileEmail(resumeId, result.value.email, result.value.subject, result.value.message, userEmail);
     }
   });
 }
