@@ -1,90 +1,120 @@
 
 <div class="full-page-layout">
-<div class="card">
-  <!-- Enhanced Search Bar Section -->
-  <div class="search-header">
-    <div class="search-container">
-      <div class="search-bar">
-        <i class="bi bi-search search-icon"></i>
-        <input
-          type="text"
-          placeholder="Search by name, email or tags..."
-          [(ngModel)]="searchTerm"
-          (input)="onSearchInput()"
-          (keyup.enter)="onSearchEnter()"
-          class="search-input"
-        />
-        <button *ngIf="searchTerm" (click)="clearSearch()" class="clear-btn">
-          <i class="bi bi-x"></i>
-        </button>
+  <div class="card">
+    <div class="search-header">
+      <div class="search-container">
+        <div class="search-bar" style="flex:1;">
+          <i class="bi bi-search search-icon" aria-hidden="true"></i>
+          <input
+            type="text"
+            placeholder="Search by name, title, email, tags..."
+            [(ngModel)]="searchTerm"
+            (input)="onSearchInput()"
+            (keyup.enter)="onSearchEnter()"
+            class="search-input"
+            aria-label="Search resumes"
+          />
+          <button *ngIf="searchTerm" (click)="clearSearch()" class="clear-btn" aria-label="Clear search">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="display:flex;gap:8px;align-items:center">
+            <label style="font-size:0.9rem;color:#6b7280;margin-right:6px">Filter</label>
+            <select class="form-control" style="width:160px" (change)="onFilterChange($event)">
+              <option value="">All Positions</option>
+              <option *ngFor="let r of currentResumes" [value]="r.title">{{ r.title }}</option>
+            </select>
+          </div>
+
+          <button id="refreshBtn" class="refresh-btn" (click)="loadResumes()" title="Refresh resumes">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
       </div>
-      <!-- <button class="btn refresh-btn" (click)="loadResumes()">
-        <i class="bi bi-arrow-clockwise"></i> Refresh
-      </button> -->
     </div>
-    <div class="d-flex justify-content-between align-items-center mb-4">
-  
-  <!-- <a routerLink="/resume-upload" class="btn btn-primary">
-    <i class="bi bi-upload me-2"></i> Upload Resume
-  </a> -->
-</div>
-  </div>
 
-  <div class="card-body">
-    <div class="table-responsive">
-      <table class="table">
-        <!-- Enhanced Table Header -->
-        <thead class="table-header">
-          <tr>
-            <th class="header-name">Name</th>
-            <th class="header-email">Title</th>
-            <th class="header-email">Email</th>
-            <th class="header-tags">Tags</th>
-            <th class="header-visaStatus"> Visa </th>
-            <th class="header-linkedln"> Linked In </th>
-            <th class="header-actions">Actions</th>
-            
-          </tr>
-        </thead>
+    <div class="card-body">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px;flex-wrap:wrap">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="font-weight:700;font-size:1.1rem">Candidate Resumes</div>
+          <div style="color:#6b7280;font-size:0.9rem">({{ currentResumes.length }} total)</div>
+        </div>
 
-        <tbody>
-          <tr *ngIf="currentResumes.length === 0">
-            <td colspan="4" class="text-center text-muted py-4">
-              No resumes found. Upload your first resume!
-            </td>
-          </tr>
-          <tr *ngFor="let resume of currentResumes">
-            <td>{{ resume.name || 'N/A' }}</td>
-            <td> {{ resume.title || 'N/A' }} </td>
-            <td>{{ resume.email || 'N/A' }}</td>
-            <td class="tags-cell">
-              <span *ngFor="let tag of resume.tags" class="badge tag-badge">
-                {{ tag }}
-              </span>
-            </td>
-            <td>{{ resume.visaStatus || 'N/A' }}</td>
-            <td>{{ resume.linkedln || 'N/A' }}</td>
-            
-            <td class="actions-cell">
-              <div class="action-buttons">
-                <button class="btn btn-download" (click)="downloadResume(resume.id)">
-                  <i class="bi bi-download"></i> Download
-                </button>
-                <button class="btn btn-delete" (click)="confirmDeleteResume(resume.id)">
-                  <i class="bi bi-trash"></i> Delete
-                </button>
-                <button class="btn btn-email" (click)="showEmailDialog(resume.id,resume.email,resume.summary)">
-                  <i class="bi bi-envelope"></i> Email
-                </button>
-                <button class="btn btn-edit" (click)="EditDialog(resume)">
-                  <i class="bi bi-envelope"></i> Edit
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-sm" (click)="exportAll = !exportAll">Toggle View</button>
+          <a class="btn btn-primary" routerLink="/resume-upload" title="Upload new resume"><i class="bi bi-upload"></i> Upload</a>
+          <button class="btn btn-outline-secondary" (click)="exportResumesCsv()" title="Export resumes as CSV"><i class="bi bi-file-earmark-spreadsheet"></i> Export Excel</button>
+        </div>
+      </div>
+
+      <!-- Tag chips and tag input -->
+      <div class="tag-controls" style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+        <div class="chips">
+          <span *ngFor="let t of selectedTags" class="tag-chip">
+            {{ t }} <button class="chip-remove" (click)="removeTag(t)">✕</button>
+          </span>
+        </div>
+        <div class="add-tag-input">
+          <input #tagInput type="text" class="form-control" placeholder="Add tag filter (e.g. Java)" (keyup.enter)="addTag(tagInput.value); tagInput.value='';" />
+          <button class="btn btn-sm" (click)="addTag(tagInput.value); tagInput.value=''">Add Tag</button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table">
+          <thead class="table-header">
+            <tr>
+              <th class="header-name">Candidate</th>
+              <th class="header-email">Title</th>
+              <th class="header-email">Email</th>
+              <th class="header-tags">Tags</th>
+              <th class="header-visaStatus">Visa</th>
+              <th class="header-linkedln">LinkedIn</th>
+              <th class="header-actions">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngIf="currentResumes.length === 0">
+              <td colspan="7" class="text-center text-muted py-4">No resumes found. Upload or import resumes to get started.</td>
+            </tr>
+
+            <tr *ngFor="let resume of currentResumes" [class.highlight]="resume.id === editingResumeId">
+              <td style="min-width:220px">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="width:44px;height:44px;border-radius:8px;background:#eef6ff;display:flex;align-items:center;justify-content:center;font-weight:700;color:#034ea2">{{ (resume.name||resume.title||'C').charAt(0).toUpperCase() }}</div>
+                  <div>
+                    <div style="font-weight:600">{{ resume.name || 'N/A' }}</div>
+                    <div style="font-size:0.85rem;color:#6b7280">{{ resume.location || resume.title || '' }}</div>
+                  </div>
+                </div>
+              </td>
+
+              <td>{{ resume.title || 'N/A' }}</td>
+              <td><a href="mailto:{{resume.email}}">{{ resume.email || 'N/A' }}</a></td>
+              <td>
+                <button *ngFor="let tag of resume.tags" class="tag-badge" (click)="$event.stopPropagation(); toggleTag(tag)" title="Toggle tag filter">{{ tag }}</button>
+              </td>
+              <td>{{ resume.visaStatus || 'N/A' }}</td>
+              <td>
+                <a *ngIf="resume.linkedln" [href]="resume.linkedln" target="_blank">Profile</a>
+                <span *ngIf="!resume.linkedln" class="text-muted">N/A</span>
+              </td>
+
+              <td class="actions-cell">
+                <div class="action-buttons">
+                  <button class="btn btn-download" (click)="downloadResume(resume.id)"><i class="bi bi-download"></i> Download</button>
+                  <button class="btn btn-email" (click)="showEmailDialog(resume.id,resume.email,resume.summary)" title="Send Profile"><i class="bi bi-envelope"></i> Email</button>
+                  <button class="btn btn-edit" (click)="EditDialog(resume)"><i class="bi bi-pencil"></i> Edit</button>
+                  <button class="btn btn-delete" (click)="confirmDeleteResume(resume.id)"><i class="bi bi-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-</div>
 </div>

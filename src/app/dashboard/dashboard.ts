@@ -6,6 +6,7 @@ import Toastify from 'toastify-js';
 import { DatePipe, NgIf, NgFor } from '@angular/common'; 
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment.prod';
+import { SentEmailService } from '../services/sent-email'
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.html',
@@ -16,6 +17,8 @@ import { environment } from '../../environments/environment.prod';
 export class Dashboard implements OnInit {
   API_BASE = `${environment.apiBaseUrl}/resumes`;
   currentResumes: any[] = [];
+  // keep an unfiltered source set so filtering is non-destructive
+  originalResumes: any[] = [];
   uploadForm: FormGroup;
   stats = {
     totalResumes: 0,
@@ -24,10 +27,11 @@ export class Dashboard implements OnInit {
   selectedTags: string[] = [];
 isEditMode = false;
 editingResumeId: string | null = null;
-
+resumeText: string = '';
   constructor(
     private http: HttpClient,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private sentEmailService: SentEmailService 
   ) {
     this.uploadForm = this.fb.group({
       name: ['', Validators.required],
@@ -39,6 +43,15 @@ editingResumeId: string | null = null;
   }
 searchTerm = '';
 searchDebounceTimer: any;
+filterBy: string = '';
+exportAll: boolean = false;
+
+  // Safe handler for template (avoids EventTarget typing issues)
+  onFilterChange(event: Event): void {
+    const target = event.target as HTMLSelectElement | null;
+    this.filterBy = target?.value || '';
+    this.filterResumes(this.searchTerm);
+  }
 
 onSearchInput(): void {
   // Debounce search to avoid excessive calls
@@ -136,14 +149,30 @@ onSearchEnter(): void {
     this.showLoading(true, 'table');
     this.http.get(this.API_BASE, {withCredentials: true}).subscribe({
       next: (resumes: any) => {
-        this.currentResumes = Array.isArray(resumes?.content) ? resumes.content : [];
+  this.originalResumes = Array.isArray(resumes?.content) ? resumes.content : [];
+  // keep a working copy
+  this.currentResumes = [...this.originalResumes];
        // console.log("Current Resume" + this.currentResumes.toString);
         console.log("Current Resumes:", JSON.stringify(this.currentResumes, null, 2));
 
         //this.loadStats();
+  // Apply any active filters/search/tags
+  this.filterResumes(this.searchTerm || '');
       },
-      error: () => {
-       // this.showToast('Failed to load resumes. Please try again.', 'error');
+      error: (err: any) => {
+        console.error('Failed to load resumes', err);
+        // If server returned a HTTP status, provide actionable guidance
+        const status = err?.status;
+        if (status === 403) {
+          Swal.fire({
+            title: 'Access denied (403)',
+            html: `The resumes endpoint returned <b>403 Forbidden</b>.<br/><br/>Possible causes:<ul><li>Authentication required (cookies/session missing)</li><li>CORS or server config blocking requests from this origin</li><li>Wrong API base URL</li></ul><br/>Check your backend auth and CORS settings, or use the correct <code>environment.apiBaseUrl</code>.`,
+            icon: 'error'
+          });
+        } else {
+          const msg = err?.message || JSON.stringify(err);
+          Swal.fire('Failed to load resumes', `<pre style="text-align:left;white-space:pre-wrap">${msg}</pre>`, 'error');
+        }
       },
       complete: () => {
         this.showLoading(false, 'table');
@@ -186,19 +215,64 @@ handleSearchInput(event: Event): void {
 }
 
   filterResumes(searchTerm: string): void {
-    if (!searchTerm) {
-      this.loadResumes();
+    const hasSearch = !!(searchTerm && searchTerm.trim());
+    const term = (searchTerm || '').toLowerCase();
+
+    // Start from the original unfiltered list
+    const source = [...(this.originalResumes || [])];
+
+    // If nothing is active, show the source
+    if (!hasSearch && !this.filterBy && (!this.selectedTags || this.selectedTags.length === 0)) {
+      this.currentResumes = source;
       return;
     }
 
-    const term = searchTerm.toLowerCase();
-    this.currentResumes = this.currentResumes.filter(resume => {
-      return (
-        (resume.name && resume.name.toLowerCase().includes(term)) ||
-        (resume.email && resume.email.toLowerCase().includes(term)) || (resume.title && resume.title.toLowerCase().includes(term)) ||
-        (resume.tags && resume.tags.some((tag: string) => tag.toLowerCase().includes(term)))
-      );
+    const selectedTagsLower = (this.selectedTags || []).map(t => (t || '').toLowerCase());
+
+    this.currentResumes = source.filter(resume => {
+      const matchesSearch = hasSearch
+        ? (
+            (resume.name && resume.name.toLowerCase().includes(term)) ||
+            (resume.email && resume.email.toLowerCase().includes(term)) ||
+            (resume.title && resume.title.toLowerCase().includes(term)) ||
+            (resume.tags && Array.isArray(resume.tags) && resume.tags.some((tag: string) => tag.toLowerCase().includes(term)))
+          )
+        : true;
+
+      const matchesFilter = this.filterBy ? (resume.title === this.filterBy) : true;
+
+      // Tag matching: require that resume.tags contains ALL selectedTags (AND semantics)
+      const tags = Array.isArray(resume.tags) ? resume.tags.map((t: string) => t.toLowerCase()) : [];
+      const matchesTags = selectedTagsLower.length === 0 ? true : selectedTagsLower.every(t => tags.includes(t));
+
+      return matchesSearch && matchesFilter && matchesTags;
     });
+  }
+
+  addTag(tag: string): void {
+    const value = (tag || '').trim();
+    if (!value) return;
+    const normalized = value.toLowerCase();
+    if (!this.selectedTags.map(t => t.toLowerCase()).includes(normalized)) {
+      this.selectedTags.push(value);
+      // reapply filters
+      this.filterResumes(this.searchTerm || '');
+    }
+  }
+
+  removeTag(tag: string): void {
+    const norm = (tag || '').toLowerCase();
+    this.selectedTags = this.selectedTags.filter(t => t.toLowerCase() !== norm);
+    this.filterResumes(this.searchTerm || '');
+  }
+
+  toggleTag(tag: string): void {
+    const norm = (tag || '').toLowerCase();
+    if (this.selectedTags.map(t => t.toLowerCase()).includes(norm)) {
+      this.removeTag(tag);
+    } else {
+      this.addTag(tag);
+    }
   }
 
   downloadResume(id: string): void {
@@ -211,6 +285,42 @@ handleSearchInput(event: Event): void {
     this.showLoading(true, 'download');
     window.open(`${this.API_BASE}/${id}/download`, '_blank');
     setTimeout(() => this.showLoading(false, 'download'), 1000);
+  }
+
+  // Export current resumes to CSV (Excel-compatible)
+  exportResumesCsv(filename = 'resumes.csv'): void {
+    const rows: string[] = [];
+    // determine headers
+    const headers = ['ID','Name','Email','Contact','Title','Tags','Summary','Download URL'];
+    rows.push(headers.map(h => `"${h.replace(/"/g,'""')}"`).join(','));
+
+    for (const r of this.currentResumes) {
+      const id = r.id || '';
+      const name = r.name || r.candidateName || '';
+      const email = r.email || r.candidateEmail || '';
+      const contact = r.contact || '';
+      const title = r.title || '';
+      const tags = Array.isArray(r.tags) ? r.tags.join('; ') : (r.tags || '');
+      const summary = r.summary || '';
+      let download = '';
+      if (r.downloadUrl) download = r.downloadUrl;
+      else if (r.id) download = `${this.API_BASE}/${r.id}/download`;
+
+      const row = [id, name, email, contact, title, tags, summary, download]
+        .map(v => `"${String(v).replace(/"/g,'""')}"`).join(',');
+      rows.push(row);
+    }
+
+    const csv = rows.join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   }
 
   confirmDeleteResume(id: string): void {
@@ -285,7 +395,7 @@ handleSearchInput(event: Event): void {
         return el?.value || '';
       };
 
-      const email = getValue('#recipientEmail');
+      const email = getValue('#recipientEmail'); 
       const subject = getValue('#emailSubject');
       const message = getValue('#customMessage');
 
@@ -331,6 +441,19 @@ handleSearchInput(event: Event): void {
 
     if (response.ok) {
       this.showToast('Email sent successfully!', 'success');
+      // ✅ Save details in service with resume metadata (if available)
+      const resume = this.currentResumes.find(r => (r.id === resumeId || r.resumeId === resumeId));
+      this.sentEmailService.addEmail({
+        resumeId,
+        candidateName: resume?.name || resume?.candidateName || '',
+        candidateEmail: resume?.email || resume?.candidateEmail || '',
+        recipientEmail,
+        subject,
+        message,
+        date: new Date(),
+        position: resume?.title || '',
+        resumeSummary: resume?.summary || ''
+      });
     } else {
       const errorMsg = result?.error || 'Failed to send email.';
       throw new Error(errorMsg);

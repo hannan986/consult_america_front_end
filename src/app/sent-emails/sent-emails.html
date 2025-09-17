@@ -1,0 +1,142 @@
+<div class="sent-emails-wrap">
+  <!-- Header -->
+  <header class="header-row">
+    <div class="title">
+      <h3>Applied Jobs</h3>
+      <div class="muted">Manage sent applications and view history</div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="controls" role="toolbar" aria-label="Applied jobs tools">
+      <div class="search-wrap">
+        <span class="icon" aria-hidden="true">🔎</span>
+        <input
+          type="text"
+          class="search-input"
+          [ngModel]="searchTerm"
+          (ngModelChange)="onSearch($event)"
+          placeholder="Search candidate, position, subject, recipient..."
+          aria-label="Search applied jobs"
+        />
+        <button
+          class="clear-search"
+          *ngIf="searchTerm"
+          (click)="onSearch('')"
+          aria-label="Clear search"
+          title="Clear search"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="inline-controls">
+        <label for="sortKey" class="sr-only">Sort</label>
+        <select
+          id="sortKey"
+          class="select"
+          [(ngModel)]="sortKey"
+          (ngModelChange)="applyFiltersAndSort()"
+          aria-label="Sort applied jobs"
+        >
+          <option value="date_desc">Newest first</option>
+          <option value="date_asc">Oldest first</option>
+          <option value="candidate_asc">Candidate (A–Z)</option>
+          <option value="position_asc">Position (A–Z)</option>
+        </select>
+
+        <button class="btn export" (click)="exportAsCSV()" [disabled]="!hasItems" title="Export to CSV">
+          Export CSV
+        </button>
+        <button class="btn danger" (click)="confirmClearAll()" [disabled]="!hasItems" title="Clear all history">
+          Clear All
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Summary -->
+  <section class="summary" aria-live="polite">
+    <div class="chip" *ngIf="searchTerm">Search: “{{ searchTerm }}”</div>
+    <div class="muted">
+      <strong>{{ displayEmails.length }}</strong> {{ displayEmails.length === 1 ? 'result' : 'results' }}
+      <span *ngIf="sentEmails.length && displayEmails.length !== sentEmails.length" class="muted">
+        (of {{ sentEmails.length }})
+      </span>
+    </div>
+  </section>
+
+  <!-- Loading -->
+  <section *ngIf="loading" class="skeleton-list" aria-label="Loading applied jobs">
+    <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5]">
+      <div class="skeleton-avatar"></div>
+      <div class="skeleton-lines">
+        <div class="line w-40"></div>
+        <div class="line w-60"></div>
+        <div class="line w-30"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Empty state -->
+  <section *ngIf="!loading && sentEmails.length === 0" class="empty-state card-empty">
+    <div class="emoji" aria-hidden="true">📭</div>
+    <div class="title">No applied jobs yet</div>
+    <div class="desc">
+      Send a candidate to start tracking applied jobs. Export and clear actions will be enabled once items exist.
+    </div>
+  </section>
+
+  <!-- List -->
+  <section class="list" *ngIf="!loading && sentEmails.length > 0">
+    <div
+      class="list-item"
+      tabindex="0"
+      role="listitem"
+      *ngFor="let e of displayEmails; trackBy: trackByItem"
+      (keyup.enter)="viewDetails(e)"
+      (click)="viewDetails(e)"
+      aria-label="View applied job details"
+    >
+      <!-- Meta -->
+      <div class="meta">
+        <div class="avatar" aria-hidden="true">{{ (e.candidateName || e.position || 'U')[0] | uppercase }}</div>
+        <div class="meta-info">
+          <div class="meta-row">
+            <div class="position" title="{{ e.position || 'N/A' }}">{{ e.position || 'N/A' }}</div>
+            <span class="status-badge">Sent</span>
+          </div>
+          <div class="candidate">
+            {{ e.candidateName || 'N/A' }} ·
+            <a [href]="'mailto:' + e.candidateEmail" (click)="$event.stopPropagation()">
+              {{ e.candidateEmail || 'N/A' }}
+            </a>
+          </div>
+          <div class="date">{{ e.date | date: 'medium' }}</div>
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="details">
+        <div class="recipient ellipsis" title="Recipient email">
+          To: {{ e.recipientEmail }}
+        </div>
+        <div class="subject ellipsis" [title]="e.subject">{{ e.subject }}</div>
+        <div class="resume-id">
+          ID: <span class="muted">{{ e.resumeId || '—' }}</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="row-actions" (click)="$event.stopPropagation()">
+        <button class="btn small" (click)="viewDetails(e)" title="View">View</button>
+        <a
+          class="btn small ghost"
+          [href]="'mailto:' + e.recipientEmail + '?subject=' + encodeURIComponent(e.subject || '')"
+          title="Email recipient"
+        >
+          Email
+        </a>
+      </div>
+    </div>
+  </section>
+</div>

@@ -170,6 +170,9 @@ $box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     tr {
       background: white;
       transition: background-color 0.2s ease;
+      &.highlight {
+        box-shadow: inset 3px 0 0 0 rgba(0,82,204,0.12);
+      }
 
       &:hover {
         background-color: $primary-blue;
@@ -203,6 +206,22 @@ $box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   }
 }
 
+/* Small utility buttons */
+.btn-sm {
+  padding: 0.4rem 0.7rem;
+  font-size: 0.82rem;
+  border-radius: 8px;
+}
+
+/* Refresh button tweak */
+.refresh-btn {
+  background-color: white;
+  color: $accent-blue;
+  border: 1px solid rgba(0,123,255,0.12);
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+}
+
 /* Tags */
 .tag-badge {
   background-color: #e1f0ff;
@@ -215,7 +234,43 @@ $box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   margin-bottom: 0.5rem;
   display: inline-flex;
   align-items: center;
+  cursor: pointer;
+  border: 1px solid rgba(0,86,179,0.08);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
+
+.tag-badge:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+
+.tag-controls {
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.tag-chip {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:#e9f5ff;
+  color:#034ea2;
+  padding:6px 10px;
+  border-radius:999px;
+  font-weight:600;
+  margin-right:6px;
+}
+
+.chip-remove { background:transparent; border:none; margin-left:6px; cursor:pointer; color:#034ea2 }
+
+.add-tag-input { display:flex; gap:8px; align-items:center }
+.add-tag-input .form-control { min-width:220px }
+
+.popular-tags { display:flex; align-items:center; gap:8px }
+
+.grid-layout { display:flex; gap:16px; align-items:flex-start }
+
+aside { background: #ffffff; border-radius: 10px; padding: 12px; border: 1px solid #ececec; }
+
+aside .btn { padding: 0.4rem 0.7rem }
 
 /* Action Buttons */
 .actions-cell {

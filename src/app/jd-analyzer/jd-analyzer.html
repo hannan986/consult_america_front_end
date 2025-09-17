@@ -1,0 +1,41 @@
+<div class="jd-analyzer-card">
+  <h2>🔎 Job Description Analyzer</h2>
+  <p>Paste or upload a job description and the app will find top-matching resumes and list missing skills.</p>
+
+  <div class="field">
+    <label for="jd">Job Description</label>
+    <textarea id="jd" rows="12" [(ngModel)]="jdText" name="jdText" placeholder="Paste full job description here..."></textarea>
+  </div>
+
+  <div class="controls">
+    <input #fileInput id="jd-file-input" type="file" accept=".txt,.pdf,.doc,.docx,text/*" style="display:none" (change)="onFileSelected($event)" />
+  <button type="button" class="upload" (click)="triggerFilePicker()">📁 Upload File</button>
+  <button type="button" (click)="analyzeFromText()" [disabled]="!jdText || submitting">🔎 Analyze JD</button>
+  </div>
+
+  <div class="meta">Selected file: <strong>{{ selectedFileName || 'none' }}</strong></div>
+  <p class="msg" *ngIf="message">{{ message }}</p>
+
+  <div class="controls" style="margin-top:10px;align-items:center">
+    <div style="display:flex;align-items:center;gap:10px">
+      <label style="margin-right:8px">Keyword match threshold:</label>
+      <div style="background:#eef2ff;padding:6px 10px;border-radius:8px;font-weight:600">{{ thresholdPercent }}%</div>
+    </div>
+    <input type="range" min="0" max="1" step="0.05" [(ngModel)]="keywordThreshold" [ngModelOptions]="{standalone:true}" style="flex:1" />
+  </div>
+
+    <div class="results" *ngIf="resultMatches && resultMatches.length">
+      <h3>Top Matches</h3>
+      <div class="match" *ngFor="let m of resultMatches">
+        <div class="left">
+          <div class="name">{{ m.name || 'N/A' }} <small class="title">{{ m.title || '—' }}</small></div>
+          <div class="score">Score: {{ m.score }}</div>
+          <div class="matched">Matched: {{ m.matched?.slice(0,6).join(', ') || '—' }}</div>
+        </div>
+        <div class="right">
+          <div *ngIf="m.missingSkills && m.missingSkills.length" class="missing">Missing: {{ m.missingSkills.join(', ') }}</div>
+    <a *ngIf="m.id" href="javascript:void(0)" (click)="$event.preventDefault(); openDownload(m.id)" class="download">Download</a>
+        </div>
+      </div>
+    </div>
+</div>

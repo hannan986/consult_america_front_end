@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { Component, OnDestroy } from '@angular/core';
+import { Router, RouterModule, RouterOutlet, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../services/auth.service';
@@ -16,10 +17,30 @@ export class Layout {
   sidebarOpen = true;
   dropdownOpen = false;
 userRole: string | null = null;
-  constructor(public authService: AuthService, private router: Router) {}
-ngOnInit() {
-  this.userRole = localStorage.getItem('userRole');
-}
+  private routeSub: any;
+  constructor(public authService: AuthService, private router: Router) {
+    // Subscribe to router events and persist last route on navigation end
+    this.routeSub = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((ev: any) => {
+      try {
+        const url = ev?.urlAfterRedirects || ev?.url || '/';
+        localStorage.setItem('lastRoute', url);
+      } catch (e) {
+        // ignore storage errors
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.userRole = localStorage.getItem('userRole');
+  }
+
+  ngOnDestroy(): void {
+    if (this.routeSub && typeof this.routeSub.unsubscribe === 'function') {
+      this.routeSub.unsubscribe();
+    }
+  }
 
 
 //   get userRole(): string | null {

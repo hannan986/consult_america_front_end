@@ -49,11 +49,38 @@
       <textarea id="description" rows="6" [(ngModel)]="job.description" name="description" placeholder="Write the job description..."></textarea>
     </div>
 
+
     <!-- Submit Button -->
     <div class="btn-row">
       <button type="submit" [disabled]="submitting">
         {{ submitting ? '🚧 Posting...' : '✅ Post Job' }}
       </button>
+    </div>
+
+    <!-- Resume Auto-Edit: upload or paste a resume to auto-insert missing skills -->
+    <div class="resume-auto-edit">
+      <h3>Auto-edit Resume (match to job)</h3>
+      <div class="form-row">
+        <label for="resumeFile">Upload Resume (text)</label>
+        <input id="resumeFile" type="file" accept=".txt,text/*" (change)="onResumeFileSelected($event)" />
+        <div class="small muted">Or paste resume text below</div>
+      </div>
+
+      <div class="form-row">
+        <label for="resumeText">Resume Text (editable)</label>
+        <textarea id="resumeText" rows="8" [(ngModel)]="resumeText" name="resumeText" placeholder="Paste or upload resume text here"></textarea>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+        <button class="btn" type="button" (click)="autoEditResume()" [disabled]="!job.title && !job.description">✏️ Auto-edit Resume</button>
+        <button class="btn" type="button" (click)="downloadEditedResume()" [disabled]="!editedResumeText">⬇️ Download Edited Resume</button>
+        <div class="muted">{{ resumeFileName ? ('Loaded: ' + resumeFileName) : '' }}</div>
+      </div>
+
+      <div class="form-row">
+        <label>Edited Resume Preview</label>
+        <textarea rows="10" readonly [value]="editedResumeText"></textarea>
+      </div>
     </div>
 
     <!-- Message -->

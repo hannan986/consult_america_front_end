@@ -103,6 +103,51 @@ toggleSelectAll(event: Event): void {
   });
 }
 
+  // Export visible candidates to CSV (Excel-readable)
+  exportToCsv(filename = 'candidates.csv') {
+    const rows: string[] = [];
+    // header using visible columns
+    const headers = this.allColumns
+      .filter(c => this.visibleColumns[c.key])
+      .map(c => `"${c.label.replace(/"/g, '""')}"`);
+    // ensure resumes column is included if visible
+    rows.push(headers.join(','));
+
+    for (const u of this.filteredUsers) {
+      const cols: string[] = [];
+      for (const col of this.allColumns.filter(c => this.visibleColumns[c.key])) {
+        let v: any = u[col.key];
+        if (col.key === 'resumes') {
+          // build a semicolon-separated list of resume download urls (if available)
+          const rlist = Array.isArray(u.resumes) ? u.resumes : [];
+          const urls = rlist.map((r: any) => {
+            // prefer downloadUrl if provided, else construct from API base and id
+            if (r.downloadUrl) return r.downloadUrl;
+            if (r.id) return `${(window as any).location.origin}/resumes/${r.id}/download`;
+            return r.fileName || '';
+          });
+          v = urls.join('; ');
+        }
+        if (v === undefined || v === null) v = '';
+        // escape quotes
+        const cell = String(v).replace(/"/g, '""');
+        cols.push(`"${cell}"`);
+      }
+      rows.push(cols.join(','));
+    }
+
+    const csv = rows.join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
 
 
 }

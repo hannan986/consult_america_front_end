@@ -1,53 +1,69 @@
 <div class="layout" [class.sidebar-closed]="!sidebarOpen">
-  <aside class="sidebar">
-    <div class="logo-wrapper">
-      
-      <mat-icon (click)="toggleSidebar()" class="toggle-btn">menu</mat-icon>
-      <span *ngIf="sidebarOpen" class="app-name">Consult America</span>
+  <aside class="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-top">
+      <div class="brand" (click)="toggleSidebar()" title="Toggle sidebar">
+        <img src="/assets/logo.png" alt="logo" class="logo-img" *ngIf="sidebarOpen" />
+        <mat-icon class="toggle-btn">menu</mat-icon>
+        <span *ngIf="sidebarOpen" class="app-name">Consult America</span>
+      </div>
     </div>
 
     <nav class="nav">
-      <a routerLink="/dashboard" routerLinkActive="active">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
         <mat-icon>dashboard</mat-icon>
-        <span *ngIf="sidebarOpen">Candidate Resumes</span>
+        <span *ngIf="sidebarOpen">Dashboard</span>
+  <span class="badge" *ngIf="sidebarOpen"></span>
       </a>
 
-      <a *ngIf="userRole && userRole !== 'CANDIDATE' && userRole !== 'EMPLOYEE'" routerLink="/candidate" routerLinkActive="active">
+      <a *ngIf="userRole && userRole !== 'CANDIDATE' && userRole !== 'EMPLOYEE'" routerLink="/candidate" routerLinkActive="active" class="nav-item">
         <mat-icon>people</mat-icon>
         <span *ngIf="sidebarOpen">Employees</span>
       </a>
 
-      <a routerLink="/uploadResume" routerLinkActive="active">
-        <mat-icon>Upload Resume</mat-icon>
+      <a routerLink="/uploadResume" routerLinkActive="active" class="nav-item">
+        <mat-icon>cloud_upload</mat-icon>
         <span *ngIf="sidebarOpen">Upload Resume</span>
       </a>
 
-      <a routerLink="/candidates" routerLinkActive="active">
-        <mat-icon>Profile</mat-icon>
+      <a routerLink="/candidates" routerLinkActive="active" class="nav-item">
+        <mat-icon>account_circle</mat-icon>
         <span *ngIf="sidebarOpen">Your Details</span>
       </a>
 
-      <a routerLink="/update_profile" routerLinkActive="active">
-        <mat-icon>Profile Update</mat-icon>
+      <a routerLink="/update_profile" routerLinkActive="active" class="nav-item">
+        <mat-icon>edit</mat-icon>
         <span *ngIf="sidebarOpen">Profile Update</span>
       </a>
 
-      <a routerLink="/job-list" routerLinkActive="active">
+      <a routerLink="/job-list" routerLinkActive="active" class="nav-item">
         <mat-icon>work</mat-icon>
-        <span *ngIf="sidebarOpen">View Jobs</span>
+        <span *ngIf="sidebarOpen">Jobs</span>
       </a>
 
-      <a *ngIf="userRole === 'ADMIN'" routerLink="/post-job" routerLinkActive="active">
+      <a routerLink="/jd-analyzer" routerLinkActive="active" class="nav-item">
+        <mat-icon>search</mat-icon>
+        <span *ngIf="sidebarOpen">JD Analyzer</span>
+      </a>
+
+      <a routerLink="/applied-jobs" routerLinkActive="active" class="nav-item">
+        <mat-icon>assignment_turned_in</mat-icon>
+        <span *ngIf="sidebarOpen">Applied Jobs</span>
+      </a>
+
+      <a *ngIf="userRole === 'ADMIN'" routerLink="/post-job" routerLinkActive="active" class="nav-item">
         <mat-icon>work_outline</mat-icon>
-        <span>Post Job</span>
+        <span *ngIf="sidebarOpen">Post Job</span>
       </a>
-      <a *ngIf="userRole === 'ADMIN'" routerLink="/registeration" routerLinkActive="active">
-        <mat-icon>Register</mat-icon>
-        <span>Register</span>
+      <a *ngIf="userRole === 'ADMIN'" routerLink="/registeration" routerLinkActive="active" class="nav-item">
+        <mat-icon>person_add</mat-icon>
+        <span *ngIf="sidebarOpen">Register</span>
       </a>
 
-      <button (click)="logout()">
-        <mat-icon>logout</mat-icon> Logout
+      <div class="nav-spacer"></div>
+
+      <button class="nav-logout" (click)="logout()" aria-label="Logout">
+        <mat-icon>logout</mat-icon>
+        <span *ngIf="sidebarOpen">Logout</span>
       </button>
     </nav>
   </aside>
