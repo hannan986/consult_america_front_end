@@ -1,0 +1,70 @@
+<h2 mat-dialog-title>{{ data ? 'Edit Applicant' : 'Add Applicant' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="save()" class="applicant-form">
+  <mat-form-field appearance="fill">
+    <mat-label>First Name</mat-label>
+    <input matInput formControlName="firstName" required />
+    <mat-error *ngIf="form.get('firstName')?.hasError('required')">
+      First name is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Middle Name</mat-label>
+    <input matInput formControlName="middleName" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Last Name</mat-label>
+    <input matInput formControlName="lastName" required />
+    <mat-error *ngIf="form.get('lastName')?.hasError('required')">
+      Last name is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Visa Status</mat-label>
+    <input matInput formControlName="visaStatus" required />
+    <mat-error *ngIf="form.get('visaStatus')?.hasError('required')">
+      Visa status is required
+    </mat-error>
+  </mat-form-field>
+
+  <!-- ✅ FIX: wrap docs in formArrayName -->
+  <div formArrayName="documents" class="documents-list">
+    <label>Documents</label>
+
+    <div *ngFor="let doc of documents.controls; let i = index" class="document-item">
+      <mat-form-field appearance="fill">
+        <mat-label>Document {{ i + 1 }}</mat-label>
+        <!-- use formControlName instead of [formControl] -->
+        <input matInput [formControlName]="i" />
+      </mat-form-field>
+
+      <button
+        mat-icon-button
+        color="warn"
+        type="button"
+        (click)="removeDocument(i)"
+      >
+        <mat-icon>remove_circle</mat-icon>
+      </button>
+    </div>
+
+    <button mat-button type="button" (click)="addDocument()">
+      Add Document
+    </button>
+  </div>
+
+  <div class="actions">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="form.invalid"
+    >
+      Save
+    </button>
+    <button mat-button type="button" (click)="close()">Cancel</button>
+  </div>
+</form>

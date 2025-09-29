@@ -51,8 +51,9 @@ export const routes: Routes = [
       { path: 'post-job', component: JobPost },
   { path: 'jd-analyzer', component: JdAnalyzer },
       { path: 'job-list', component: JobList },
-      { path: 'document-upload', component: DocumentUploadComponent },
-       { path: 'applied-jobs', component: SentEmailsComponent },
+  { path: 'document-upload', component: DocumentUploadComponent },
+  { path: 'applied-jobs', component: SentEmailsComponent },
+  { path: 'applicants', loadComponent: () => import('./applicants/applicants.component').then(m => m.ApplicantsComponent) },
       
       { 
   path: 'job-details/:id', 

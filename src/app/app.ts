@@ -1,3 +1,4 @@
+import { MatTabsModule } from '@angular/material/tabs';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StatePersistenceService } from './services/state-persistence.service';
@@ -12,13 +13,38 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RegistrationComponent } from './auth/registration/registration.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ApplicantsComponent } from './applicants/applicants.component';
+import { ApplicantFormDialogComponent } from './applicants/applicant-form-dialog.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,MatSnackBarModule,  HttpClientModule,ReactiveFormsModule, MatCardModule,         // ✅ Add this
-    MatFormFieldModule,    // Make sure this is added too
+  imports: [
+    RouterOutlet,
+    MatSnackBarModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule,ReactiveFormsModule   ],
+    MatIconModule,
+    MatIconModule,
+    MatTableModule,
+    MatDialogModule,
+    MatProgressSpinnerModule,
+    
+    
+  ApplicantsComponent,
+  ApplicantFormDialogComponent,
+  MatTabsModule,
+  // Angular Material table cell/row directives for standalone usage
+  // (these are re-exported by MatTableModule, but explicit import can help with template errors)
+  // No explicit import needed for matHeaderCellDef, matCellDef, matHeaderRowDef, matRowDef if MatTableModule is present
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

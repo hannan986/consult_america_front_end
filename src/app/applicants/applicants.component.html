@@ -1,0 +1,119 @@
+<div class="applicants-container">
+  <div class="applicants-header-bar">
+    <div class="applicants-title">Consult America Employees</div>
+    <div class="add-applicant-bar" *ngIf="!addingNew">
+      <button mat-raised-button color="primary" (click)="startAdd()">Add Employee</button>
+      <button mat-stroked-button color="accent" (click)="exportToExcel()" style="margin-left:12px;">Export to Excel</button>
+    </div>
+  </div>
+  <!-- Add New Applicant Form -->
+  <form (ngSubmit)="saveNewApplicant()" [formGroup]="newApplicantForm">
+    <mat-table [dataSource]="['new']" *ngIf="addingNew">
+      <!-- First Name -->
+      <ng-container matColumnDef="firstName">
+        <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
+        <mat-cell *matCellDef="let row" [formGroup]="newApplicantForm">
+          <input matInput formControlName="firstName" placeholder="First Name" required />
+        </mat-cell>
+      </ng-container>
+
+      <!-- Middle Name -->
+      <ng-container matColumnDef="middleName">
+        <mat-header-cell *matHeaderCellDef>Middle Name</mat-header-cell>
+        <mat-cell *matCellDef="let row" [formGroup]="newApplicantForm">
+          <input matInput formControlName="middleName" placeholder="Middle Name" />
+        </mat-cell>
+      </ng-container>
+
+      <!-- Last Name -->
+      <ng-container matColumnDef="lastName">
+        <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>
+        <mat-cell *matCellDef="let row" [formGroup]="newApplicantForm">
+          <input matInput formControlName="lastName" placeholder="Last Name" required />
+        </mat-cell>
+      </ng-container>
+
+      <!-- Visa Status -->
+      <ng-container matColumnDef="visaStatus">
+        <mat-header-cell *matHeaderCellDef>Visa Status</mat-header-cell>
+        <mat-cell *matCellDef="let row" [formGroup]="newApplicantForm">
+          <input matInput formControlName="visaStatus" placeholder="Visa Status" required />
+        </mat-cell>
+      </ng-container>
+
+      <!-- Documents -->
+      <ng-container matColumnDef="documents">
+        <mat-header-cell *matHeaderCellDef>Documents</mat-header-cell>
+        <mat-cell *matCellDef="let row" [formGroup]="newApplicantForm">
+          <input matInput formControlName="documents" placeholder="Comma separated" />
+        </mat-cell>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+        <mat-cell *matCellDef="let row" [formGroup]="newApplicantForm">
+          <button mat-raised-button color="primary" type="submit" [disabled]="newApplicantForm.invalid">Save</button>
+          <button mat-button type="button" (click)="cancelAdd()">Cancel</button>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Render Table -->
+      <mat-header-row *matHeaderRowDef="newApplicantColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: newApplicantColumns"></mat-row>
+    </mat-table>
+  </form>
+
+  <!-- Button to Start Add -->
+
+  <!-- Existing Applicants Table -->
+  <mat-table [dataSource]="applicants" *ngIf="!loading">
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+      <mat-cell *matCellDef="let applicant">{{ applicant.id }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="firstName">
+      <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
+      <mat-cell *matCellDef="let applicant">{{ applicant.firstName }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="middleName">
+      <mat-header-cell *matHeaderCellDef>Middle Name</mat-header-cell>
+      <mat-cell *matCellDef="let applicant">{{ applicant.middleName }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="lastName">
+      <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>
+      <mat-cell *matCellDef="let applicant">{{ applicant.lastName }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="visaStatus">
+      <mat-header-cell *matHeaderCellDef>Visa Status</mat-header-cell>
+      <mat-cell *matCellDef="let applicant">{{ applicant.visaStatus }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="documents">
+      <mat-header-cell *matHeaderCellDef>Documents</mat-header-cell>
+      <mat-cell *matCellDef="let applicant">{{ applicant.documents?.join(', ') }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+      <mat-cell *matCellDef="let applicant">
+        <button mat-icon-button color="accent" (click)="editApplicant(applicant)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteApplicant(applicant)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+
+  <!-- Spinner -->
+  <mat-spinner *ngIf="loading"></mat-spinner>
+</div>
